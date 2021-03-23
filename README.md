@@ -40,7 +40,7 @@ Just copy your individual URLs from the Virtualsmarthome web site. The JSON vers
 For security reasons the Root CA is sored in the code. The certifficate will expire in September 2021. It has to be updated then.
 
 ## Arduino IDE and Programming
-The sketch works with current Arduiono IDE 1.9.13 and ESP32 board version 1.0.5.
+The sketch works with current Arduiono IDE 1.8.13 and ESP32 board version 1.0.5.
 
 In the IDE you have to select:
 - Board: ESP32 Wrover Module
