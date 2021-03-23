@@ -309,7 +309,7 @@ static esp_err_t index_handler(httpd_req_t *req) {
 
 
 //*****************************************************************************
-// Uri definitions for web server. Currently jus main page "/".
+// Uri definitions for web server. Currently just main page "/".
 //
 httpd_uri_t index_uri = {
   .uri       = "/",
@@ -460,8 +460,7 @@ void loop() {
     }
 
     if (out_res.net_boxes) {  // A general face has been recognised (no name so far)
-      if (align_face(out_res.net_boxes, image_matrix, aligned_face) == ESP_OK)
-      {
+      if (align_face(out_res.net_boxes, image_matrix, aligned_face) == ESP_OK) {
         
         // Switch LED on to give mor light for recognition
         digitalWrite(LED_BUILTIN, HIGH); // LED on
@@ -497,8 +496,7 @@ void loop() {
 
     fb = esp_camera_fb_get();
 
-    if (g_state == START_DETECT || g_state == START_ENROLL || g_state == START_RECOGNITION)
-    {
+    if (g_state == START_DETECT || g_state == START_ENROLL || g_state == START_RECOGNITION) {
       out_res.net_boxes = NULL;
       out_res.face_id = NULL;
 
@@ -506,10 +504,8 @@ void loop() {
 
       out_res.net_boxes = face_detect(image_matrix, &mtmn_config);
 
-      if (out_res.net_boxes)
-      {
-        if (align_face(out_res.net_boxes, image_matrix, aligned_face) == ESP_OK)
-        {
+      if (out_res.net_boxes) {
+        if (align_face(out_res.net_boxes, image_matrix, aligned_face) == ESP_OK) {
           digitalWrite(LED_BUILTIN, HIGH); // LED on
           led_on_millis = millis(); // 
           
@@ -520,45 +516,39 @@ void loop() {
             client.send("FACE DETECTED");
           }
 
-          if (g_state == START_ENROLL)
-          {
+          if (g_state == START_ENROLL) {
             int left_sample_face = do_enrollment(&st_face_list, out_res.face_id);
             char enrolling_message[64];
             sprintf(enrolling_message, "SAMPLE NUMBER %d FOR %s", ENROLL_CONFIRM_TIMES - left_sample_face, st_name.enroll_name);
             client.send(enrolling_message);
-            if (left_sample_face == 0)
-            {
+            
+            if (left_sample_face == 0) {
               ESP_LOGI(TAG, "Enrolled Face ID: %s", st_face_list.tail->id_name);
               g_state = START_STREAM;
               char captured_message[64];
               sprintf(captured_message, "FACE CAPTURED FOR %s", st_face_list.tail->id_name);
               client.send(captured_message);
               send_face_list(client);
-
             }
           }
 
-          if (g_state == START_RECOGNITION  && (st_face_list.count > 0))
-          {
+          if (g_state == START_RECOGNITION  && (st_face_list.count > 0)) {
             face_id_node *f = recognize_face_with_name(&st_face_list, out_res.face_id);
-            if (f)
-            {
+            
+            if (f) {
               char recognised_message[64];
               sprintf(recognised_message, "Detected %s", f->id_name);
               face_detected(f->id_name);
               client.send(recognised_message);
             }
-            else
-            {
+            else {
               client.send("FACE NOT RECOGNISED");
             }
           }
           dl_matrix3d_free(out_res.face_id);
         }
-
       }
-      else
-      {
+      else {
         if (g_state != START_DETECT) {
           client.send("NO FACE DETECTED");
         }
@@ -567,7 +557,6 @@ void loop() {
       if (g_state == START_DETECT && millis() - last_detected_millis > 500) { // Detecting but no face detected
         client.send("DETECTING");
       }
-
     }
 
     client.sendBinary((const char *)fb->buf, fb->len); // Send frame buffer (picture) to client
