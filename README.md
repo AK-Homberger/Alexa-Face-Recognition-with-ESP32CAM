@@ -46,9 +46,9 @@ You need an external programmer to install the sketch on the ESP32-CAM module. H
 
 If the sketch is working, you have to add the persons with names with the web frontend "Add User".
 
-The same names have to be used the in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/820072e45e19db61a0750780037e1fea23065cbc/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L428) to request the URL for each person (currently "Person1" and Person2").
-
 The face information is stored persitently in flash memory.
+
+The same names have to be used the in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/820072e45e19db61a0750780037e1fea23065cbc/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L428) to request the URL for each person (currently "Person1" and Person2").
 
 ```
 if (strcmp(name, "Person1") == 0) {
