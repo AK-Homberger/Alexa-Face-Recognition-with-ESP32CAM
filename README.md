@@ -51,7 +51,7 @@ An additional library "ArduinoWebsockets" has to be installed via the IDE Librar
 You need an external programmer to install the sketch on the ESP32-CAM module. Here is a [tutorial](https://randomnerdtutorials.com/esp32-cam-video-streaming-face-recognition-arduino-ide/) that shows the process.
 
 ## Web Frontend
-After programming you have to start the web frontend with the IP shown in the SerialMonitor of the iDE.
+After programming you have to start the web frontend with the IP shown in the SerialMonitor of the IDE.
 
 If the sketch is working, you have to add the persons with names with the web frontend "ADD USER
 ".
