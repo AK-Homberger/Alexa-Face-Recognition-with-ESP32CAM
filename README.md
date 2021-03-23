@@ -14,7 +14,7 @@ I did several changes to the code:
 - Added root certifficate and code to request URLs for each recognised face.
 - Use builtin LED to show if face is detected and also to provide addtional light for better detection.
 
-Is using https://www.virtualsmarthome.xyz/ "URL Routine Trigger" solution to trigger Alexa routines.
+The solution is using https://www.virtualsmarthome.xyz/ "URL Routine Trigger" solution to trigger Alexa routines.
 
 You have to register for this service with the Amazon account and also enable the Virtualsmarthome skill in Alexa.
 For each person to be recognised, create a "Trigger name" and URL.
