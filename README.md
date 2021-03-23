@@ -39,7 +39,7 @@ And you have to set the different URLs in function [ReqURL()](https://github.com
 ```
 Just copy your individual URLs from the Virtualsmarthome web site. The JSON version is the preferred option (short response).
 
-For security reasons the Root CA is sored in the code. The certifficate will expire in September 2021. It has to be updated then.
+For security reasons the [Root CA certifficate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/dbfc8bc4eaf89e81cfe0bc2ecbc2932a62472344/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L37) is sored in the code. The certifficate will expire in September 2021. It has to be updated then.
 
 ## Arduino IDE and Programming
 The sketch works with current Arduiono IDE 1.8.13 and ESP32 board version 1.0.5.
