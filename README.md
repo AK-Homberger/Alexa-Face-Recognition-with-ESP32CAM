@@ -9,7 +9,7 @@ It is based on this repository: https://github.com/robotzero1/esp32cam-access-co
 
 I did several changes to the code:
 - Use readable HTML/JS code in camera_index.h (makes it easier to change content).
-- Chang javascript code to make it work also with Safari web client (deleted audio interface)
+- Changed javascript code to make it work also with Safari web client (deleted audio interface)
 - Allow face detection with and without client connected via web socket.
 - Added root certifficate and code to request URLs for each recognised face.
 - Use builtin LED to show if face is detected and also to provide addtional light for better detection.
@@ -65,6 +65,8 @@ if (strcmp(name, "Person1") == 0) {
 ```
 
 After enabling the skill in Alexa you can then create new routines. As trigger you can the select a "Door Bell" with the name you have given at Virtualsmarthome.
+
+Enjoy now personal responses of Alexa after your face has been recognised.
 
 # Updates
 - Version 0.1, 23.03.2021: Initial version.
