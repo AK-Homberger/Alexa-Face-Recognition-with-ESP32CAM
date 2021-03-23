@@ -39,7 +39,7 @@ For security reasons the Root CA is sored in the code. The certifficate will exp
 
 The sketch works with current Arduiono IDE 1.9.13 and ESP32 board version 1.0.5.
 
-In IDE you have to select:
+In the IDE you have to select:
 - Board: ESP32 Wrover Module
 - Partition scheme: Huge APP...
 
