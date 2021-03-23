@@ -42,7 +42,7 @@ Just copy your individual URLs from the Virtualsmarthome web site. The JSON vers
 For security reasons the [Root CA certifficate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/dbfc8bc4eaf89e81cfe0bc2ecbc2932a62472344/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L37) is sored in the code. The certifficate will expire in September 2021. It has to be updated then.
 
 ## Arduino IDE and Programming
-The sketch works with current Arduiono IDE 1.8.13 and ESP32 board version 1.0.5.
+The sketch works with current Arduino IDE 1.8.13 and ESP32 board version 1.0.5.
 
 In the IDE you have to select:
 - Board: ESP32 Wrover Module
