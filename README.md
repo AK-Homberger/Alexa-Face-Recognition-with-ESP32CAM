@@ -9,6 +9,7 @@ It is based on this repository: https://github.com/robotzero1/esp32cam-access-co
 
 I did several changes to the code:
 - Use readable HTML/JS code in camera_index.h (makes it easier to change content).
+- Chang javascript code to make it work also with Safari web client (deleted audio interface)
 - Allow face detection with and without client connected via web socket.
 - Added root certifficate and code to request URLs for each recognised face.
 - Use builtin LED to show if face is detected and also to provide addtional light for better detection.
@@ -36,17 +37,22 @@ Just copy your individual URLs from the Virtualsmarthome web site. The JSON vers
 
 For security reasons the Root CA is sored in the code. The certifficate will expire in September 2021. It has to be updated then.
 
-Sketch works with current Arduiono IDE 1.9.13 and ESP32 board version 1.0.5.
+The sketch works with current Arduiono IDE 1.9.13 and ESP32 board version 1.0.5.
 
 In IDE you have to select:
 - Board: ESP32 Wrover Module
 - Partition scheme: Huge APP...
 
+An additional library "ArduinoWebsockets" have to be installed via the IDE Library Manager (version 0.5.0 is working for me).
+
 You need an external programmer to install the sketch on the ESP32-CAM module. Here is a [tutorioal](https://randomnerdtutorials.com/esp32-cam-video-streaming-face-recognition-arduino-ide/) that shows the process.
 
-If the sketch is working, you have to add the persons with names with the web frontend "Add User".
+After programming you have to start the web frontend with the IP shown in the SerialMonitor of the iDE.
 
-The face information is stored persitently in flash memory.
+If the sketch is working, you have to add the persons with names with the web frontend "ADD USER
+".
+
+The face information is stored persistently in flash memory.
 
 The same names have to be used the in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/820072e45e19db61a0750780037e1fea23065cbc/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L428) to request the URL for each person (currently "Person1" and Person2").
 
@@ -58,7 +64,7 @@ if (strcmp(name, "Person1") == 0) {
     }
 ```
 
-After enabling the skill in Alexa you cen the create new routines. As trigger you can the select a "Door Bell" with the name you have given at Virtualsmarthome.
+After enabling the skill in Alexa you can then create new routines. As trigger you can the select a "Door Bell" with the name you have given at Virtualsmarthome.
 
 # Updates
 - Version 0.1, 23.03.2021: Initial version.
