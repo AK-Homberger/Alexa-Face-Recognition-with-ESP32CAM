@@ -36,7 +36,7 @@ In IDE you have to select:
 - Board: ESP32 Wrover Module
 - Partition scheme: Huge APP...
 
-You need an external programmer to install the sketch on the ESP32-CAM module.
+You need an external programmer to install the sketch on the ESP32-CAM module. Here is a [tutorioal](https://randomnerdtutorials.com/esp32-cam-video-streaming-face-recognition-arduino-ide/) that shows the process.
 
 If the sketch is working you have to add the persons with names with the web frontend.
 
