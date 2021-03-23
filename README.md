@@ -32,3 +32,20 @@ In IDE you have to select:
 - Board: ESP32 Wrover Module
 - Partition scheme: Huge APP...
 
+![Web](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Alexa%20Face%20Recognition.pgn)
+
+You have to add the persons with names with the web frontend.
+
+The same names have to be used the in the code to request the URL for each person.
+
+```
+if (strcmp(name, "Person1") == 0) {
+      ReqURL(0);
+    } else if (strcmp (name, "Person2") == 0) {
+      ReqURL(1);
+    }
+```
+
+After enabling the skill in Alexa you cen the create new routines. As trigger you can the select a "door bell" with the name you have given at Virtualsmarthome.
+
+
