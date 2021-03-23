@@ -73,7 +73,7 @@ if (strcmp(name, "Person1") == 0) {
 ```
 
 ## Cofigure Alexa
-After enabling the skill in Alexa you can then create new routines. As trigger you can the select a "Door Bell" with the name you have given at Virtualsmarthome.
+After enabling the skill in Alexa you can then create new routines. As trigger you can then select a "Door Bell" with the name you have given at Virtualsmarthome.
 
 Enjoy now personal responses of Alexa after your face has been recognised.
 
