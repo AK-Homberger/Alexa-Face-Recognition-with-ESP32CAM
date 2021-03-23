@@ -7,10 +7,16 @@ Purpose is to start routines in Alexa service based on recognised faces from ESP
 
 It is based on this repository: https://github.com/robotzero1/esp32cam-access-control
 
+I did several changes to the code:
+- Use readable HTML/JS code in camera_index.h (makes it easier to change content).
+- Allow face detection with and without client connected via web socket.
+- Added root certifficate and code to request URLs for each recognised face.
+- Use builtin LED to show if face is detected and also to provide addtional light for better detection.
+
 Is using https://www.virtualsmarthome.xyz/ "URL Routine Trigger" solution to trigger Alexa routines.
 
 You have to register for this service with the Amazon account and also enable the Virtualsmarthome skill in Alexa.
-For each person to be recognised create a "Trigger name" and URL.
+For each person to be recognised, create a "Trigger name" and URL.
 
 The different URLs are then requested from ESP32 via https after a defined face has been recognised.
 A virtual "Door Bell" can be used in Alexa to trigger routines for each face/URL.
@@ -26,7 +32,7 @@ And you have to set the different URLs in function [ReqURL()](https://github.com
  const char* URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
                                "https://www.virtualsmarthome.xyz/url_routine_trigger/..."}; 
 ```
-Just copy your individual URLs from the Virtualsmarthome web site.
+Just copy your individual URLs from the Virtualsmarthome web site. The JSON version is the preferred option (short response).
 
 For security reasons the Root CA is sored in the code. The certifficate will expire in September 2021. It has to be updated then.
 
@@ -38,9 +44,11 @@ In IDE you have to select:
 
 You need an external programmer to install the sketch on the ESP32-CAM module. Here is a [tutorioal](https://randomnerdtutorials.com/esp32-cam-video-streaming-face-recognition-arduino-ide/) that shows the process.
 
-If the sketch is working you have to add the persons with names with the web frontend.
+If the sketch is working, you have to add the persons with names with the web frontend "Add User".
 
-The same names have to be used the in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/820072e45e19db61a0750780037e1fea23065cbc/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L428) to request the URL for each person.
+The same names have to be used the in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/820072e45e19db61a0750780037e1fea23065cbc/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L428) to request the URL for each person (currently "Person1" and Person2").
+
+The face information is stored persitently in flash memory.
 
 ```
 if (strcmp(name, "Person1") == 0) {
@@ -52,4 +60,5 @@ if (strcmp(name, "Person1") == 0) {
 
 After enabling the skill in Alexa you cen the create new routines. As trigger you can the select a "Door Bell" with the name you have given at Virtualsmarthome.
 
-
+# Updates
+- Version 0.1, 23.03.2021: Initial version.
