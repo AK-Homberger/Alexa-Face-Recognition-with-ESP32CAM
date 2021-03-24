@@ -42,7 +42,7 @@ Just copy your individual URLs from the Virtualsmarthome web site. The JSON vers
 
 For security reasons the [Root CA certificate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/679f133bf7162803b51e32012d9674ca8e168aaa/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L38) is sored in the code. The certificate will expire in September 2021. It has to be updated then.
 
-To perform the update just go to the https://www.virtualsmarthome.xyz web site an click on lock symbol left to the URL. Then show details of connection, further information and show certificate. Then click on [DST Root CA X3](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Root-Certificate.png) and then on "PEM (Certificate)". The certificate text have to be copied into the sketch to update.
+To perform the update (with Firefox browser) just go to the https://www.virtualsmarthome.xyz web site an click on lock symbol left to the URL. Then show details of connection, further information and show certificate. Then click on [DST Root CA X3](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Root-Certificate.png) and then on "PEM (Certificate)". The certificate text have to be copied into the sketch to update.
 
 ## Arduino IDE and Programming
 The sketch works with current Arduino IDE 1.8.13 and ESP32 board version 1.0.5.
