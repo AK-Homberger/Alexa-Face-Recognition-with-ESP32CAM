@@ -248,7 +248,7 @@ void setup() {
 // Set you own URLs
 //
 void ReqURL(int i) {
-  const char* URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
+  const char *URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
                                "https://www.virtualsmarthome.xyz/url_routine_trigger/..."}; 
   
   if (millis() < last_sent_millis + 5000) return;   // Only once every 5 seconds
