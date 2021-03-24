@@ -62,7 +62,6 @@ If the sketch is working, you have to add the persons with names with the web fr
 The face information is stored persistently in flash memory.
 
 The same names have to be used the in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/679f133bf7162803b51e32012d9674ca8e168aaa/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L430) to request the URL for each person (currently "Person1" and "Person2").
-
 If you want to change the names just change the code accordingly. You can also add more names. But then also add URLs in list in [ReqURL()](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/679f133bf7162803b51e32012d9674ca8e168aaa/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L250)
 
 ```
