@@ -80,5 +80,9 @@ After enabling the skill in Alexa you can then create new routines. As trigger y
 
 Enjoy now personal responses of Alexa after your face has been recognised.
 
+## Housing
+
+Ther are many nice 3D print housings for the ESP32-CAM available at Thingiverse. Example: https://www.thingiverse.com/thing:3652452  
+
 # Updates
 - Version 0.1, 23.03.2021: Initial version.
