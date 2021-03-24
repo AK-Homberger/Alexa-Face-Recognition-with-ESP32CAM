@@ -10,8 +10,9 @@ The purpose of this repository is to start routines in Alexa service based on re
 It is based on this repository: https://github.com/robotzero1/esp32cam-access-control
 
 I did several changes to the code:
-- Use readable HTML/JS code in camera_index.h (makes it easier to change content).
-- Changed javascript code to make it work also with Safari web client (deleted audio interface).
+- Additional comments in code.
+- Use readable HTML/Javascript code in camera_index.h (makes it easier to change content).
+- Changed Javascript code to make it work also with Safari web client (deleted audio interface).
 - Allow face detection with and without client connected via web socket.
 - Added root certifficate and code to request URLs for each recognised face.
 - Use builtin LED to show if face is detected and also to provide addtional light for better detection.
