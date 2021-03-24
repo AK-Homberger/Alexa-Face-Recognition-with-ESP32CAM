@@ -32,15 +32,15 @@
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
 
-const char* ssid = "ssid";
-const char* password = "password";
+const char *ssid = "ssid";
+const char *password = "password";
 
 // Root certificate from Digital Signature Trust Co.
 // Required for www.virtualsmarthome.xyz
 // Will expire on 30. September 2021
 
 const char rootCACertificate[] PROGMEM = R"=====(
-  -----BEGIN CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
 MIIDSjCCAjKgAwIBAgIQRK+wgNajJ7qJMDmGLvhAazANBgkqhkiG9w0BAQUFADA/
 MSQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT
 DkRTVCBSb290IENBIFgzMB4XDTAwMDkzMDIxMTIxOVoXDTIxMDkzMDE0MDExNVow
@@ -76,7 +76,7 @@ Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
 using namespace websockets;
 WebsocketsServer socket_server;
 
-camera_fb_t * fb = NULL;
+camera_fb_t *fb = NULL;
 
 long current_millis;
 long last_detected_millis = 0;
@@ -212,7 +212,7 @@ void setup() {
     return;
   }
 
-  sensor_t * s = esp_camera_sensor_get();
+  sensor_t *s = esp_camera_sensor_get();
   s->set_framesize(s, FRAMESIZE_QVGA);
 
 #if defined(CAMERA_MODEL_M5STACK_WIDE)
@@ -335,16 +335,17 @@ void app_httpserver_init () {
 //*****************************************************************************
 // Read face data from flash memory
 //
-void app_facenet_main(){
+void app_facenet_main() {
   face_id_name_init(&st_face_list, FACE_ID_SAVE_NUMBER, ENROLL_CONFIRM_TIMES);
   aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);
   read_face_id_from_flash_with_name(&st_face_list);
 }
 
+
 //*****************************************************************************
 // store new face information in flash
 //
-static inline int do_enrollment(face_id_name_list * face_list, dl_matrix3d_t *new_id) {
+static inline int do_enrollment(face_id_name_list *face_list, dl_matrix3d_t *new_id) {
   ESP_LOGD(TAG, "START ENROLLING");
   int left_sample_face = enroll_face_id_to_flash_with_name(face_list, new_id, st_name.enroll_name);
   ESP_LOGD(TAG, "Face ID %s Enrollment: Sample %d",
