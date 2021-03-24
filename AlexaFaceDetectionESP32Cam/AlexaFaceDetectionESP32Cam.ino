@@ -245,7 +245,7 @@ void setup() {
 
 //*****************************************************************************
 // Request URL for detected face "i".
-// Set you own URLs
+// Set your own URLs
 //
 void ReqURL(int i) {
   const char *URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
@@ -486,12 +486,12 @@ void loop() {
   client.onMessage(handle_message);
     
   send_face_list(client);    // Send face list to client
-  client.send("STREAMING");  // Set moder for client
+  client.send("STREAMING");  // Set mode for client
    
   while (client.available()) {
     client.poll();
 
-    if (millis() - interval > led_on_millis) { // current time - face recognised time > 3 secs
+    if (millis() - interval > led_on_millis) { // Current time - face recognised time > 3 secs
       digitalWrite(LED_BUILTIN, LOW); //LED off
     }
 
