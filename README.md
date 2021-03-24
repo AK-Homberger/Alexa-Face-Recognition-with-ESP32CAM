@@ -29,13 +29,13 @@ A virtual SmartHome "Door Bell" can be used in Alexa to trigger routines for eac
 ## Changes in the Code
 You have to set the WLAN access details in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/820072e45e19db61a0750780037e1fea23065cbc/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L35):
 ```
-const char* ssid = "ssid";
-const char* password = "password";
+const char *ssid = "ssid";
+const char *password = "password";
 ```
 
 And you have to set the different URLs in function [ReqURL()](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/820072e45e19db61a0750780037e1fea23065cbc/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L250):
 ```
- const char* URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
+ const char *URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
                               "https://www.virtualsmarthome.xyz/url_routine_trigger/..."}; 
 ```
 Just copy your individual URLs from the Virtualsmarthome web site. The JSON version is the preferred option (short response).
