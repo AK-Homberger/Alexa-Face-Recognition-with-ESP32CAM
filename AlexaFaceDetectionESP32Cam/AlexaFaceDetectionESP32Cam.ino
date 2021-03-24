@@ -476,6 +476,7 @@ void loop() {
             face_detected(f->id_name);            
           }
         }
+        dl_matrix3d_free(out_res.face_id);
       }
     }
   esp_camera_fb_return(fb);  // Release frame buffer
