@@ -63,9 +63,9 @@ If the sketch is working, you have to add the persons with names with the web fr
 
 The face information is stored persistently in flash memory.
 
-The same names have to be used the in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/679f133bf7162803b51e32012d9674ca8e168aaa/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L430) to request the URL for each person (currently "Person1" and Person2").
+The same names have to be used the in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/679f133bf7162803b51e32012d9674ca8e168aaa/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L430) to request the URL for each person (currently "Person1" and "Person2").
 
-If you want to change the names just change the code accordingly. You can allso add more names. But then also add URLs in list in [ReqURL()](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/679f133bf7162803b51e32012d9674ca8e168aaa/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L250)
+If you want to change the names just change the code accordingly. You can also add more names. But then also add URLs in list in [ReqURL()](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/679f133bf7162803b51e32012d9674ca8e168aaa/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L250)
 
 ```
 if (strcmp(name, "Person1") == 0) {
@@ -82,7 +82,7 @@ Enjoy now personal responses of Alexa after your face has been recognised.
 
 ## Housing
 
-Ther are many nice 3D print housings for the ESP32-CAM available at Thingiverse. Example: https://www.thingiverse.com/thing:3652452  
+There are many nice 3D print housings for the ESP32-CAM available at Thingiverse. Example: https://www.thingiverse.com/thing:3652452  
 
 # Updates
 - Version 0.1, 23.03.2021: Initial version.
