@@ -19,7 +19,8 @@ I did several changes to the code:
 
 Background information regarding ESP-Face component from Espressiv can be found [here](https://github.com/espressif/esp-face/).
 
-![Flow](https://github.com/espressif/esp-face/blob/master/img/face-recognition-system.png);
+In general, the face recognition process works like this:
+![Flow](https://github.com/espressif/esp-face/blob/master/img/face-recognition-system.png)
 
 ## Preparations
 The solution is using https://www.virtualsmarthome.xyz/ "URL Routine Trigger" service to trigger Alexa routines.
