@@ -11,7 +11,7 @@ It is based on this repository: https://github.com/robotzero1/esp32cam-access-co
 
 I did several changes to the code:
 - Additional comments in code.
-- Use readable HTML/Javascript code in camera_index.h (makes it easier to change content).
+- Use of readable HTML/Javascript code in camera_index.h (makes it easier to change content).
 - Changed Javascript code to make it work also with Safari web client (deleted audio interface).
 - Allow face detection with and without client connected via web socket.
 - Added root certificate and code to request URLs for each recognised face.
