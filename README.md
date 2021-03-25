@@ -5,7 +5,7 @@ An ESP32-CAM based face recognition solution to trigger Alexa routines.
 
 The purpose of this repository is to start routines in Alexa service based on recognised faces from ESP32-CAM.
 
-![Web](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Alexa%20Face%20Recognition.pgn)
+![Web](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Alexa%20Face%20Recognition.png)
 
 It is based on this repository: https://github.com/robotzero1/esp32cam-access-control
 
