@@ -55,6 +55,12 @@ In the IDE you have to select:
 
 An additional library "ArduinoWebsockets" has to be installed via the IDE Library Manager (version 0.5.0 is working for me).
 
+If you copy/move the sketch, make sure all four files are in the new folder:
+- AlexaFaceDetectionESP32Cam.ino 
+- camera_index.h
+- camera_pins.h
+- partitions.csv
+
 You need an external programmer to install the sketch on the ESP32-CAM module. Here is a [tutorial](https://randomnerdtutorials.com/esp32-cam-video-streaming-face-recognition-arduino-ide/) that shows the process.
 
 ## Web Frontend
