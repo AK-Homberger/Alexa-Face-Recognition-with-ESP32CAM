@@ -18,7 +18,7 @@
 // URLs are requested from ESP32 via https after a defined face has been recognised.
 // A Virtual "Door Bell" can be used in Alexa to trigger routines for each face/URL.
 
-// Version 0.1, 23.03.2021, AK-Homberger
+// Version 0.2, 25.03.2021, AK-Homberger
 
 #include <ArduinoWebsockets.h>
 #include "esp_http_server.h"
@@ -32,8 +32,13 @@
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
 
+// WLAN credentials
 const char *ssid = "ssid";
 const char *password = "password";
+
+// URLs
+const char *URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
+                             "https://www.virtualsmarthome.xyz/url_routine_trigger/..."}; 
 
 // Root certificate from Digital Signature Trust Co.
 // Required for www.virtualsmarthome.xyz
@@ -248,9 +253,7 @@ void setup() {
 // Set your own URLs
 //
 void ReqURL(int i) {
-  const char *URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
-                               "https://www.virtualsmarthome.xyz/url_routine_trigger/..."}; 
-  
+ 
   if (millis() < last_sent_millis + 5000) return;   // Only once every 5 seconds
   last_sent_millis = millis();
   
@@ -447,7 +450,8 @@ void loop() {
   // Do face recognition while no client is connected via web socket connection
   
   while (!socket_server.poll()) {  // No web socket connection
-
+    // Serial.println(xPortGetFreeHeapSize());
+    
     // Prepare camera
     fb = esp_camera_fb_get(); // Get frame buffer pointer from camera
     
@@ -478,6 +482,10 @@ void loop() {
         }
         dl_matrix3d_free(out_res.face_id);
       }
+      dl_lib_free(out_res.net_boxes->score);
+      dl_lib_free(out_res.net_boxes->box);
+      if (out_res.net_boxes->landmark != NULL) dl_lib_free(out_res.net_boxes->landmark);
+      dl_lib_free(out_res.net_boxes);
     }
   esp_camera_fb_return(fb);  // Release frame buffer
   fb = NULL;
@@ -549,6 +557,10 @@ void loop() {
           }
           dl_matrix3d_free(out_res.face_id);
         }
+        dl_lib_free(out_res.net_boxes->score);
+        dl_lib_free(out_res.net_boxes->box);
+        if (out_res.net_boxes->landmark != NULL) dl_lib_free(out_res.net_boxes->landmark);
+        dl_lib_free(out_res.net_boxes);
       }
       else {
         if (g_state != START_DETECT) {
