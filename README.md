@@ -17,7 +17,7 @@ I did several changes to the code:
 - Added root certificate and code to request URLs for each recognised face.
 - Use built-in LED to show if face is detected and also to provide additional light for better detection.
 
-Background information regarding ESP-FACE library from Espressiv can be found [here](https://github.com/espressif/esp-face).
+Background information regarding the ESP-Face component from Espressiv can be found [here](https://github.com/espressif/esp-face).
 
 ## Preparations
 The solution is using https://www.virtualsmarthome.xyz/ "URL Routine Trigger" service to trigger Alexa routines.
