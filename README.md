@@ -16,6 +16,7 @@ I did several changes to the code:
 - Allow face detection with and without client connected via web socket.
 - Added root certificate and code to request URLs for each recognised face.
 - Use built-in LED to show if face is detected and also to provide additional light for better detection.
+- Closed memory leak be freeing used buffers.
 
 Background information regarding ESP-Face component from Espressiv can be found [here](https://github.com/espressif/esp-face/).
 
