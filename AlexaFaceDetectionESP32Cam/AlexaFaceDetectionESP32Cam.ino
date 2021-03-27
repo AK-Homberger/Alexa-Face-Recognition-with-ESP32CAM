@@ -32,14 +32,23 @@
 #include <fr_flash.h>
 #include "camera_index.h"
 
+#define ENROLL_CONFIRM_TIMES 5   // Confirm same face 5 times
+#define FACE_ID_SAVE_NUMBER 7    // Maximum number of faces stored in flash
+
 // WLAN credentials
 const char *ssid = "ssid";
 const char *password = "password";
 
-// Trigger URLs
+// Trigger URLs: 7 URLs for maximum 7 enrolled faces (see FACE_ID_SAVE_NUMBER)
 const char *URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
-                             "https://www.virtualsmarthome.xyz/url_routine_trigger/..."
+                             "https://www.virtualsmarthome.xyz/url_routine_trigger/...",
+                             "",
+                             "",
+                             "",
+                             "",
+                             ""                             
                             };
+
 
 // Root certificate from Digital Signature Trust Co.
 // Required for www.virtualsmarthome.xyz
@@ -67,9 +76,6 @@ JDGFoqgCWjBH4d1QB7wCCZAA62RjYJsWvIjJEubSfZGL+T0yjWW06XyxV3bqxbYo
 Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
 -----END CERTIFICATE-----
 )=====" ;
-
-#define ENROLL_CONFIRM_TIMES 5
-#define FACE_ID_SAVE_NUMBER 7
 
 // Select camera model
 //#define CAMERA_MODEL_WROVER_KIT
@@ -412,6 +418,7 @@ void handle_message(WebsocketsClient & client, WebsocketsMessage msg) {
 // Request URL depending on name
 //
 void face_detected(char *name) {
+  int i;
   
   // Do a short blink with LED to show that a face was recognised
   
@@ -420,12 +427,14 @@ void face_detected(char *name) {
   digitalWrite(LED_BUILTIN, HIGH); // LED on
   
   Serial.println("Face detected");
-    
-  if (strcmp(name, "Person1") == 0) {
-    ReqURL(0);
-  } else if (strcmp (name, "Person2") == 0) {
-    ReqURL(1);
+  
+  face_id_node *head = st_face_list.head;
+
+  for (i=0; i < st_face_list.count; i++)  {
+    if (strcmp(name, head->id_name) == 0) ReqURL(i);
+    head = head->next;
   }
+    
   digitalWrite(LED_BUILTIN, LOW); // LED off
 }
 
@@ -440,7 +449,7 @@ void loop() {
   // Do face recognition while no client is connected via web socket connection
   
   while (!socket_server.poll()) {   // No web socket connection
- 
+
     if (millis() - interval > led_on_millis) { // current time - face recognised time > 3 secs
       digitalWrite(LED_BUILTIN, LOW); // LED off after 3 secs
     }
