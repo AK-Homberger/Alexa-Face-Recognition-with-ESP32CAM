@@ -58,7 +58,7 @@ Just copy your individual URLs from the Virtualsmarthome web site. The JSON vers
 
 The order of the URLs is matching the order of stored (enrolled) faces. 
 
-**Tip:** You can store more the one face ID per person. That is further improving recognition precision.
+**Tip:** You can store more then one face ID per person. That is further improving recognition precision.
 
 ## Root CA Certificate
 For security reasons the [Root CA certificate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/ef9957b1f4fca16dc45bdeaca3f3dd21c3718409/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L53) is stored in the code. **The certificate will expire in September 2021**. It has to be updated then.
