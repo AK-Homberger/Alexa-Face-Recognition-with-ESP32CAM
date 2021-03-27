@@ -48,7 +48,7 @@ And you have to set the different URLs in function [ReqURL()](https://github.com
 ```
 Just copy your individual URLs from the Virtualsmarthome web site. The JSON version is the preferred option (short response).
 
-For security reasons the [Root CA certificate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/88b7f29757a18bb0dffea29df37f63f229893aef/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L44) is stored in the code. The certificate will expire in September 2021. It has to be updated then.
+For security reasons the [Root CA certificate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/88b7f29757a18bb0dffea29df37f63f229893aef/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L44) is stored in the code. The certificate will **expire in September 2021**. It has to be updated then.
 
 To perform the update (with Firefox browser) just go to the https://www.virtualsmarthome.xyz web site an click on lock symbol left to the URL. Then show details of connection, further information and show certificate. Then click on [DST Root CA X3](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Root-Certificate.png) and then on "PEM (Certificate)". The certificate text have to be copied into the sketch to update.
 
