@@ -422,7 +422,7 @@ void face_detected(char *name) {
     
   if (strcmp(name, "Person1") == 0) {
     ReqURL(0);
-  } else if (strcmp (name, "Susanne") == 0) {
+  } else if (strcmp (name, "Person2") == 0) {
     ReqURL(1);
   }
   digitalWrite(LED_BUILTIN, LOW); // LED off
