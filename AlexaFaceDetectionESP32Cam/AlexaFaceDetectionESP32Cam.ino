@@ -18,27 +18,28 @@
 // URLs are requested from ESP32 via https after a defined face has been recognised.
 // A Virtual "Door Bell" can be used in Alexa to trigger routines for each face/URL.
 
-// Version 0.2, 25.03.2021, AK-Homberger
+// Version 0.3, 27.03.2021, AK-Homberger
 
+#include <Arduino.h>
 #include <ArduinoWebsockets.h>
-#include "esp_http_server.h"
-#include "esp_timer.h"
-#include "esp_camera.h"
-#include "camera_index.h"
-#include "Arduino.h"
-#include "fd_forward.h"
-#include "fr_forward.h"
-#include "fr_flash.h"
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
+#include <esp_http_server.h>
+#include <esp_timer.h>
+#include <esp_camera.h>
+#include <fd_forward.h>
+#include <fr_forward.h>
+#include <fr_flash.h>
+#include "camera_index.h"
 
 // WLAN credentials
 const char *ssid = "ssid";
 const char *password = "password";
 
-// URLs
+// Trigger URLs
 const char *URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
-                             "https://www.virtualsmarthome.xyz/url_routine_trigger/..."}; 
+                             "https://www.virtualsmarthome.xyz/url_routine_trigger/..."
+                            };
 
 // Root certificate from Digital Signature Trust Co.
 // Required for www.virtualsmarthome.xyz
@@ -78,8 +79,9 @@ Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
 #define CAMERA_MODEL_AI_THINKER
 #include "camera_pins.h"
 
+WiFiClientSecure client;        // Create HTTPS client
 using namespace websockets;
-WebsocketsServer socket_server;
+WebsocketsServer socket_server; // Create WebSocket server
 
 camera_fb_t *fb = NULL;
 
@@ -236,11 +238,12 @@ void setup() {
   Serial.println("");
   Serial.println("WiFi connected");
 
-  setClock();
+  setClock();                           // Set Time/date for TLS certificate validation
+  client.setCACert(rootCACertificate);  // Set Root CA certificate
 
-  app_httpserver_init();
-  app_facenet_main();
-  socket_server.listen(81);
+  app_httpserver_init();                // Initialise HTTP server
+  app_facenet_main();                   // Prepare fece recognition
+  socket_server.listen(81);             // Start WebSocket server on port 81
 
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
@@ -253,50 +256,36 @@ void setup() {
 // Set your own URLs
 //
 void ReqURL(int i) {
- 
+
   if (millis() < last_sent_millis + 5000) return;   // Only once every 5 seconds
   last_sent_millis = millis();
+
+  HTTPClient https;
+
+  if (https.begin(client, URL[i])) {  // HTTPS
+     // start connection and send HTTP header
+    int httpCode = https.GET();
+
+    // httpCode will be negative on error
+    if (httpCode > 0) {
+      // HTTP header has been send and Server response header has been handled
   
-  WiFiClientSecure *client = new WiFiClientSecure;
-  
-  if (client) {
-    client -> setCACert(rootCACertificate);
-    {
-      // Add a scoping block for HTTPClient https to make sure it is destroyed before WiFiClientSecure *client is
-      HTTPClient https;
-
-      Serial.print("[HTTPS] begin...\n");
-      if (https.begin(*client, URL[i])) {  // HTTPS
-        Serial.print("[HTTPS] GET...\n");
-        // start connection and send HTTP header
-        int httpCode = https.GET();
-
-        // httpCode will be negative on error
-        if (httpCode > 0) {
-          // HTTP header has been send and Server response header has been handled
-          Serial.printf("[HTTPS] GET... code: %d\n", httpCode);
-
-          // file found at server
-          if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
-            String payload = https.getString();
-            Serial.println(payload);
-          }
-        } else {
-          Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
-          ESP.restart();
-        }
-
-        https.end();
-      } else {
-        Serial.printf("[HTTPS] Unable to connect\n");
+      // file found at server
+      if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+        String payload = https.getString();
+        Serial.println(payload);
+        Serial.print("Heap size: ");
+        Serial.println(xPortGetFreeHeapSize());  // Show free memory
       }
-
-      // End extra scoping block
+    } else {
+      Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
+      
+      ESP.restart();  // Restart ESP in case of connection problems
     }
 
-    delete client;
+    https.end();
   } else {
-    Serial.println("Unable to create client");
+    Serial.printf("[HTTPS] Unable to connect\n");
   }
 }
 
@@ -432,10 +421,10 @@ void face_detected(char *name) {
   Serial.println("Face detected");
     
   if (strcmp(name, "Person1") == 0) {
-      ReqURL(0);
-    } else if (strcmp (name, "Person2") == 0) {
-      ReqURL(1);
-    }
+    ReqURL(0);
+  } else if (strcmp (name, "Susanne") == 0) {
+    ReqURL(1);
+  }
   digitalWrite(LED_BUILTIN, LOW); // LED off
 }
 
@@ -449,11 +438,10 @@ void loop() {
 
   // Do face recognition while no client is connected via web socket connection
   
-  while (!socket_server.poll()) {  // No web socket connection
-    // Serial.println(xPortGetFreeHeapSize());
-    
+  while (!socket_server.poll()) {   // No web socket connection
+        
     // Prepare camera
-    fb = esp_camera_fb_get(); // Get frame buffer pointer from camera
+    fb = esp_camera_fb_get();       // Get frame buffer pointer from camera
     
     out_res.net_boxes = NULL;
     out_res.face_id = NULL;
@@ -480,10 +468,10 @@ void loop() {
             face_detected(f->id_name);            
           }
         }
-        dl_matrix3d_free(out_res.face_id);
+        dl_matrix3d_free(out_res.face_id);   // Free allocated memory
       }
-      dl_lib_free(out_res.net_boxes->score);
-      dl_lib_free(out_res.net_boxes->box);
+      dl_lib_free(out_res.net_boxes->score); // Free allocated memory
+      dl_lib_free(out_res.net_boxes->box); 
       if (out_res.net_boxes->landmark != NULL) dl_lib_free(out_res.net_boxes->landmark);
       dl_lib_free(out_res.net_boxes);
     }
@@ -573,7 +561,7 @@ void loop() {
       }
     }
 
-    client.sendBinary((const char *)fb->buf, fb->len); // Send frame buffer (picture) to client
+    client.sendBinary((const char *)fb->buf, fb->len); // Send frame buffer (jpg picture) to client
 
     esp_camera_fb_return(fb);  // Release frame buffer
     fb = NULL;
