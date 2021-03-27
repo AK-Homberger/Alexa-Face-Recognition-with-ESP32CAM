@@ -346,6 +346,7 @@ static inline int do_enrollment(face_id_name_list *face_list, dl_matrix3d_t *new
   return left_sample_face;
 }
 
+
 //*****************************************************************************
 // Send face list to client via websocket connection.
 //
