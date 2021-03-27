@@ -35,7 +35,7 @@ The different URLs are then requested from ESP32 via https after a defined face 
 A virtual SmartHome "Door Bell" can be used in Alexa to trigger routines for each face/URL.
 
 ## Changes in the Code
-You have to set the WLAN access details in the [code]https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/eccd2204d3cf4cadcbc6d92c56f02257b5518b33/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L35):
+You have to set the WLAN access details in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/eccd2204d3cf4cadcbc6d92c56f02257b5518b33/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L35):
 ```
 const char *ssid = "ssid";
 const char *password = "password";
@@ -81,7 +81,7 @@ If you want to change the names just change the code accordingly. You can also a
 ```
 if (strcmp(name, "Person1") == 0) {
     ReqURL(0);
-  } else if (strcmp (name, "Susanne") == 0) {
+  } else if (strcmp (name, "Person2") == 0) {
     ReqURL(1);
   }
 ```
