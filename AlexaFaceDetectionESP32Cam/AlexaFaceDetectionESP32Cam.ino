@@ -440,21 +440,22 @@ void loop() {
   // Do face recognition while no client is connected via web socket connection
   
   while (!socket_server.poll()) {   // No web socket connection
-        
-    // Prepare camera
-    fb = esp_camera_fb_get();       // Get frame buffer pointer from camera
-    
-    out_res.net_boxes = NULL;
-    out_res.face_id = NULL;
-    fmt2rgb888(fb->buf, fb->len, fb->format, out_res.image);
-    out_res.net_boxes = face_detect(image_matrix, &mtmn_config);
-
+ 
     if (millis() - interval > led_on_millis) { // current time - face recognised time > 3 secs
       digitalWrite(LED_BUILTIN, LOW); // LED off after 3 secs
     }
 
+    out_res.net_boxes = NULL;
+    out_res.face_id = NULL;
+        
+    // Prepare camera
+    fb = esp_camera_fb_get();       // Get frame buffer pointer from camera (JPEG)
+   
+    fmt2rgb888(fb->buf, fb->len, fb->format, out_res.image);     // JPEG to bitmap conversion
+    out_res.net_boxes = face_detect(image_matrix, &mtmn_config); // Detect face
+
     if (out_res.net_boxes) {  // A general face has been recognised (no name so far)
-      if (align_face(out_res.net_boxes, image_matrix, aligned_face) == ESP_OK) {
+      if (align_face(out_res.net_boxes, image_matrix, aligned_face) == ESP_OK) {  // Allign face
         
         // Switch LED on to give mor light for recognition
         digitalWrite(LED_BUILTIN, HIGH); // LED on
