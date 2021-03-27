@@ -386,27 +386,37 @@ void handle_message(WebsocketsClient & client, WebsocketsMessage msg) {
     g_state = START_STREAM;
     client.send("STREAMING");
   }
+  
   if (msg.data() == "detect") {
     g_state = START_DETECT;
     client.send("DETECTING");
   }
+
   if (msg.data().substring(0, 8) == "capture:") {
-    g_state = START_ENROLL;
-    char person[FACE_ID_SAVE_NUMBER * ENROLL_NAME_LEN] = {0,};
-    msg.data().substring(8).toCharArray(person, sizeof(person));
-    memcpy(st_name.enroll_name, person, strlen(person) + 1);
-    client.send("CAPTURING");
+
+    if (st_face_list.count < FACE_ID_SAVE_NUMBER) {
+      g_state = START_ENROLL;
+      char person[FACE_ID_SAVE_NUMBER * ENROLL_NAME_LEN] = {0,};
+      msg.data().substring(8).toCharArray(person, sizeof(person));
+      memcpy(st_name.enroll_name, person, strlen(person) + 1);
+      client.send("CAPTURING");
+    } else {
+      client.send("MAXIMUM REACHED");
+    }
   }
+  
   if (msg.data() == "recognise") {
     g_state = START_RECOGNITION;
     client.send("RECOGNISING");
   }
+  
   if (msg.data().substring(0, 7) == "remove:") {
     char person[ENROLL_NAME_LEN * FACE_ID_SAVE_NUMBER];
     msg.data().substring(7).toCharArray(person, sizeof(person));
     delete_face_id_in_flash_with_name(&st_face_list, person);
     send_face_list(client); // reset faces in the browser
   }
+  
   if (msg.data() == "delete_all") {
     delete_all_faces(client);
   }
