@@ -58,6 +58,8 @@ Just copy your individual URLs from the Virtualsmarthome web site. The JSON vers
 
 The order of the URLs is matching the order of stored (enrolled) faces. 
 
+**Tip:** You can store more the one face ID per person. That is further improving recognition precision.
+
 For security reasons the [Root CA certificate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/f39aa16a79ad23ffcae6ef790284641323c5e346/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L53) is stored in the code. **The certificate will expire in September 2021**. It has to be updated then.
 
 To perform the update (with Firefox browser) just go to the https://www.virtualsmarthome.xyz web site an click on lock symbol left to the URL. Then show details of connection, further information and show certificate. Then click on [DST Root CA X3](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Root-Certificate.png) and then on "PEM (Certificate)". The certificate text have to be copied into the sketch to update.
