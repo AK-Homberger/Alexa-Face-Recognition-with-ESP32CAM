@@ -83,19 +83,16 @@ WiFiClientSecure client;        // Create HTTPS client
 using namespace websockets;
 WebsocketsServer socket_server; // Create WebSocket server
 
-camera_fb_t *fb = NULL;
+camera_fb_t *fb = NULL;         // Frame buffer pointer
 
-long current_millis;
-long last_detected_millis = 0;
-long last_sent_millis = 0;
+unsigned long last_detected_millis = 0;   // Timer last time face detected
+unsigned long last_sent_millis = 0;       // Timer last time URL sent
 
 #define LED_BUILTIN 4 
-unsigned long led_on_millis = 0;
-long interval = 3000;           // LED on for 3 seconds
-bool face_recognised = false;
+unsigned long led_on_millis = 0;      // Timer for LED on time
+const int interval = 3000;            // LED on for 3 seconds
 
-void app_facenet_main();
-void app_httpserver_init();
+bool face_recognised = false;
 
 typedef struct
 {
@@ -104,7 +101,9 @@ typedef struct
   dl_matrix3d_t *face_id;
 } http_img_process_result;
 
-static inline mtmn_config_t app_mtmn_config()
+// Configure MTMN detection settings
+
+static inline mtmn_config_t set_mtmn_config()
 {
   mtmn_config_t mtmn_config = {0};
   mtmn_config.type = FAST;
@@ -122,14 +121,14 @@ static inline mtmn_config_t app_mtmn_config()
   mtmn_config.o_threshold.candidate_number = 1;
   return mtmn_config;
 }
-mtmn_config_t mtmn_config = app_mtmn_config();
+mtmn_config_t mtmn_config = set_mtmn_config();
 
-face_id_name_list st_face_list;
-static dl_matrix3du_t *aligned_face = NULL;
+face_id_name_list st_face_list;               // Name list for defined face IDs
+static dl_matrix3du_t *aligned_face = NULL;   // Alligned face pointer
 
-httpd_handle_t camera_httpd = NULL;
+httpd_handle_t camera_httpd = NULL;           // Web server handle
 
-typedef enum
+typedef enum        // Status definitions
 {
   START_STREAM,
   START_DETECT,
@@ -146,12 +145,13 @@ typedef struct
   char enroll_name[ENROLL_NAME_LEN];
 } httpd_resp_value;
 
-httpd_resp_value st_name;
+httpd_resp_value st_name;     // Name of ID to enroll
 
 
 //*****************************************************************************
 // Not sure if WiFiClientSecure checks the validity date of the certificate.
 // Setting clock just to be sure...
+//
 void setClock() {
   configTime(0, 0, "pool.ntp.org", "time.nist.gov");
 
@@ -241,8 +241,8 @@ void setup() {
   setClock();                           // Set Time/date for TLS certificate validation
   client.setCACert(rootCACertificate);  // Set Root CA certificate
 
-  app_httpserver_init();                // Initialise HTTP server
-  app_facenet_main();                   // Prepare fece recognition
+  httpserver_init();                    // Initialise HTTP server
+  facenet_main();                       // Prepare face recognition
   socket_server.listen(81);             // Start WebSocket server on port 81
 
   Serial.print("Camera Ready! Use 'http://");
@@ -314,7 +314,7 @@ httpd_uri_t index_uri = {
 //*****************************************************************************
 // Start http server and register URI handler
 //
-void app_httpserver_init () {
+void httpserver_init() {
   httpd_config_t config = HTTPD_DEFAULT_CONFIG();
   
   if (httpd_start(&camera_httpd, &config) == ESP_OK) {
@@ -327,7 +327,7 @@ void app_httpserver_init () {
 //*****************************************************************************
 // Read face data from flash memory
 //
-void app_facenet_main() {
+void facenet_main() {
   face_id_name_init(&st_face_list, FACE_ID_SAVE_NUMBER, ENROLL_CONFIRM_TIMES);
   aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);
   read_face_id_from_flash_with_name(&st_face_list);
@@ -335,7 +335,7 @@ void app_facenet_main() {
 
 
 //*****************************************************************************
-// store new face information in flash
+// Store new face information in flash
 //
 static inline int do_enrollment(face_id_name_list *face_list, dl_matrix3d_t *new_id) {
   ESP_LOGD(TAG, "START ENROLLING");
