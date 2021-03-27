@@ -67,6 +67,8 @@ If you copy/move the sketch, make sure all four files are in the new folder:
 - camera_pins.h
 - partitions.csv
 
+Especially "partitions.csv". This file is not copied from Arduino IDE when using "Safe as..." function.
+
 You need an external programmer to install the sketch on the ESP32-CAM module. Here is a [tutorial](https://randomnerdtutorials.com/esp32-cam-video-streaming-face-recognition-arduino-ide/) that shows the process.
 
 ## Web Frontend
