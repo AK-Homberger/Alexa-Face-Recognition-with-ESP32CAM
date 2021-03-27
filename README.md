@@ -35,20 +35,30 @@ The different URLs are then requested from ESP32 via https after a defined face 
 A virtual SmartHome "Door Bell" can be used in Alexa to trigger routines for each face/URL.
 
 ## Changes in the Code
-You have to set the WLAN access details in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/ecc9e65fadc4525765817b7f55db62cf1030bca4/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L35):
+You have to set the WLAN access details in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/f39aa16a79ad23ffcae6ef790284641323c5e346/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L38):
 ```
 const char *ssid = "ssid";
 const char *password = "password";
 ```
 
-And you have to set the different URLs in function [ReqURL()](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/ecc9e65fadc4525765817b7f55db62cf1030bca4/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L39):
+And you have to set the different URLs in function [ReqURL()](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/f39aa16a79ad23ffcae6ef790284641323c5e346/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L42):
 ```
- const char *URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
-                              "https://www.virtualsmarthome.xyz/url_routine_trigger/..."}; 
+ // Trigger URLs: 7 URLs for maximum 7 enrolled faces (see FACE_ID_SAVE_NUMBER)
+const char *URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
+                             "https://www.virtualsmarthome.xyz/url_routine_trigger/...",
+                             "",
+                             "",
+                             "",
+                             "",
+                             ""                             
+                            };
+
 ```
 Just copy your individual URLs from the Virtualsmarthome web site. The JSON version is the preferred option (short response).
 
-For security reasons the [Root CA certificate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/ecc9e65fadc4525765817b7f55db62cf1030bca4/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L44) is stored in the code. **The certificate will expire in September 2021**. It has to be updated then.
+The order of the URLs is matching the order of stored (enrolled) faces. 
+
+For security reasons the [Root CA certificate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/f39aa16a79ad23ffcae6ef790284641323c5e346/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L53) is stored in the code. **The certificate will expire in September 2021**. It has to be updated then.
 
 To perform the update (with Firefox browser) just go to the https://www.virtualsmarthome.xyz web site an click on lock symbol left to the URL. Then show details of connection, further information and show certificate. Then click on [DST Root CA X3](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Root-Certificate.png) and then on "PEM (Certificate)". The certificate text have to be copied into the sketch to update.
 
@@ -77,16 +87,7 @@ If the sketch is working, you have to add the persons with names with the web fr
 
 The face information is stored persistently in flash memory.
 
-The same names have to be used the in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/ecc9e65fadc4525765817b7f55db62cf1030bca4/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L422) to request the URL for each person (currently "Person1" and "Person2").
-If you want to change the names just change the code accordingly. You can also add more names. But then also add URLs in list in [ReqURL()](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/ecc9e65fadc4525765817b7f55db62cf1030bca4/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L39)
-
-```
-if (strcmp(name, "Person1") == 0) {
-    ReqURL(0);
-  } else if (strcmp (name, "Person2") == 0) {
-    ReqURL(1);
-  }
-```
+The order of added users is relevant for the URL to be sent. The name is not relevant.
 
 ## Configure Alexa
 After enabling the skill in Alexa you can then create new routines. As trigger you can then select a "Door Bell" with the name you have given at Virtualsmarthome.
