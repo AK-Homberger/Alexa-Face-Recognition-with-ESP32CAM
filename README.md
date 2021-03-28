@@ -62,7 +62,7 @@ The order of the URLs is matching the order of stored (enrolled) faces.
 ## Root CA Certificate
 For security reasons the [Root CA certificate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/ef9957b1f4fca16dc45bdeaca3f3dd21c3718409/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L53) is stored in the code. **The certificate will expire in September 2021**. It has to be updated then.
 
-To perform the update (with Firefox browser) just go to the https://www.virtualsmarthome.xyz web site an click on lock symbol left to the URL. Then show details of connection, further information and show certificate. Then click on [DST Root CA X3](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Root-Certificate.png) and then on "PEM (Certificate)". The certificate text have to be copied into the sketch to update.
+To perform the update (with Firefox browser) just go to the https://www.virtualsmarthome.xyz web site and click on the lock symbol left to the URL. Then show details of connection, further information and show certificate. Then click on [DST Root CA X3](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Root-Certificate.png) and then on "PEM (Certificate)". The certificate text have to be copied into the sketch to update.
 
 ## Arduino IDE and Programming
 The sketch works with current Arduino IDE 1.8.13 and ESP32 board version 1.0.5.
@@ -89,7 +89,7 @@ If the sketch is working, you have to add the persons with names with the web fr
 
 The face information is stored persistently in flash memory.
 
-The order of added users is relevant for the URL to be sent. The name is not relevant.
+The **order of added users is relevant** for the URL to be sent. The name is not relevant.
 
 ## Configure Alexa
 After enabling the skill in Alexa you can then create new routines. As trigger you can then select a "Door Bell" with the name you have given at Virtualsmarthome.
