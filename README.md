@@ -31,7 +31,7 @@ The solution is using https://www.virtualsmarthome.xyz/ "URL Routine Trigger" se
 You have to register for this free service with the Amazon account and also enable the Virtualsmarthome skill in Alexa.
 For each person to be recognised, create a "Trigger name" and URL.
 
-The different URLs are then requested from ESP32 via https after a defined face has been recognised.
+The different URLs are then requested from the ESP32 via https after a defined face has been recognised.
 A virtual SmartHome "Door Bell" with the name of the defined "Trigger name"can be used in Alexa to trigger routines for each face/URL.
 
 ## Changes in the Code
