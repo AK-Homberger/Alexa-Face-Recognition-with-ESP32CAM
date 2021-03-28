@@ -32,7 +32,7 @@ You have to register for this free service with the Amazon account and also enab
 For each person to be recognised, create a "Trigger name" and URL.
 
 The different URLs are then requested from ESP32 via https after a defined face has been recognised.
-A virtual SmartHome "Door Bell" can be used in Alexa to trigger routines for each face/URL.
+A virtual SmartHome "Door Bell" with the name of the defined "Trigger name"can be used in Alexa to trigger routines for each face/URL.
 
 ## Changes in the Code
 You have to set the WLAN access details in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/ef9957b1f4fca16dc45bdeaca3f3dd21c3718409/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L38):
