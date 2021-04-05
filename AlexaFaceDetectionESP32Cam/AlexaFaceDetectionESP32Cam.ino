@@ -220,7 +220,7 @@ void setup() {
   image_matrix = dl_matrix3du_alloc(1, 320, 240, 3);                 // Allocate memory for image matrix
   
   // Define web server events
-  web_server.on("/", handleRoot);       // This is display page
+  web_server.on("/", handleRoot);       // This is the display page
   web_server.onNotFound(handleNotFound);
   
   web_server.begin();                   // Start web server
@@ -236,7 +236,7 @@ void setup() {
 // Send main web page
 //
 void handleRoot() {
-  web_server.send(200, "text/html", index_main); 
+  web_server.send(200, "text/html", index_main); // index_main is defined in camera_index.h
 }
 
 
@@ -317,12 +317,8 @@ void read_faces() {
 //*****************************************************************************
 // Store new face information in flash
 //
-static inline int do_enrollment(face_id_name_list *face_list, dl_matrix3d_t *new_id) {
-  ESP_LOGD(TAG, "START ENROLLING");
+int do_enrollment(face_id_name_list *face_list, dl_matrix3d_t *new_id) {
   int left_sample_face = enroll_face_id_to_flash_with_name(face_list, new_id, enroll_name);
-  ESP_LOGD(TAG, "Face ID %s Enrollment: Sample %d",
-           enroll_name,
-           ENROLL_CONFIRM_TIMES - left_sample_face);
   return left_sample_face;
 }
 
@@ -330,7 +326,7 @@ static inline int do_enrollment(face_id_name_list *face_list, dl_matrix3d_t *new
 //*****************************************************************************
 // Send face list to client via websocket connection.
 //
-static esp_err_t send_face_list(WebsocketsClient &client) {
+void send_face_list(WebsocketsClient &client) {
   client.send("delete_faces"); // tell browser to delete all faces
   face_id_node *head = st_face_list.head;
   char add_face[64];
@@ -346,7 +342,7 @@ static esp_err_t send_face_list(WebsocketsClient &client) {
 //*****************************************************************************
 // Delete all faces from flash
 //
-static esp_err_t delete_all_faces(WebsocketsClient & client) {
+void delete_all_faces(WebsocketsClient &client) {
   delete_face_all_in_flash_with_name(&st_face_list);
   client.send("delete_faces");
 }
