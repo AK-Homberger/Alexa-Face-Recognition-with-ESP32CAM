@@ -104,7 +104,7 @@ dl_matrix3d_t *face_id;                       // Face ID
 
 mtmn_config_t mtmn_config = {0};              // MTMN detection settings
 face_id_name_list st_face_list;               // Name list for defined face IDs
-dl_matrix3du_t *aligned_face = NULL;          // Alligned face pointer
+dl_matrix3du_t *aligned_face = NULL;          // Aligned face pointer
 dl_matrix3du_t *image_matrix = NULL;          // Image matrix pointer
 
 char enroll_name[ENROLL_NAME_LEN];            // Name for face ID to be stored
@@ -156,7 +156,7 @@ void setup() {
   mtmn_config = mtmn_init_config();     // Set MTMN face recognition details (default)
   read_faces();                         // Read faces from flash
   
-  aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);  // Allocate memory for alligned face
+  aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);  // Allocate memory for aligned face
   image_matrix = dl_matrix3du_alloc(1, 320, 240, 3);                 // Allocate memory for image matrix
   
   // Define web server events
@@ -416,13 +416,13 @@ void loop() {
     detected_face = face_detect(image_matrix, &mtmn_config);      // Detect face
 
     if (detected_face) {  // A general face has been recognised (no name so far)
-      if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Allign face
+      if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Align face
         
-        // Switch LED on to give mor light for recognition
+        // Switch LED on to give more light for recognition
         digitalWrite(LED_BUILTIN, HIGH); // LED on
         led_on_millis = millis();        // Set on time
         
-        face_id = get_face_id(aligned_face);  // Try to get face id for face
+        face_id = get_face_id(aligned_face);  // Get face id for face
         
         if (st_face_list.count > 0) {  // Only try if we have faces registered at all
           face_id_node *f = recognize_face_with_name(&st_face_list, face_id);
