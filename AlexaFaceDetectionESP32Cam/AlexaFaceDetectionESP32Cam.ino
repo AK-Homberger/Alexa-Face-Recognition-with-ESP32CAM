@@ -18,7 +18,7 @@
 // URLs are requested from ESP32 via https after a defined face has been recognised.
 // A Virtual "Door Bell" can be used in Alexa to trigger routines for each face/URL.
 
-// Version 0.4, 05.04.2021, AK-Homberger
+// Version 0.5, 06.04.2021, AK-Homberger
 
 #include <Arduino.h>
 #include <ArduinoWebsockets.h>
@@ -31,6 +31,14 @@
 #include <fr_forward.h>
 #include <fr_flash.h>
 #include "camera_index.h"
+
+// Select camera model
+//#define CAMERA_MODEL_WROVER_KIT
+//#define CAMERA_MODEL_ESP_EYE
+//#define CAMERA_MODEL_M5STACK_PSRAM
+//#define CAMERA_MODEL_M5STACK_WIDE
+#define CAMERA_MODEL_AI_THINKER
+#include "camera_pins.h"
 
 #define ENROLL_CONFIRM_TIMES 5   // Confirm same face 5 times
 #define FACE_ID_SAVE_NUMBER 7    // Maximum number of faces stored in flash
@@ -76,20 +84,12 @@ Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
 -----END CERTIFICATE-----
 )=====" ;
 
-// Select camera model
-//#define CAMERA_MODEL_WROVER_KIT
-//#define CAMERA_MODEL_ESP_EYE
-//#define CAMERA_MODEL_M5STACK_PSRAM
-//#define CAMERA_MODEL_M5STACK_WIDE
-#define CAMERA_MODEL_AI_THINKER
-#include "camera_pins.h"
+WiFiClientSecure client;        // Create HTTPS client
+WebServer web_server(80);       // Create Web Server on TCP port 80
+using namespace websockets;
+WebsocketsServer socket_server; // Create Web Socket server
 
 camera_fb_t *fb = NULL;         // Frame buffer pointer for picture from camera
-
-WiFiClientSecure client;        // Create HTTPS client
-WebServer web_server(80);       // Web server on TCP port 80
-using namespace websockets;
-WebsocketsServer socket_server; // Create WebSocket server
 
 unsigned long last_detected_millis = 0;       // Timer last time face detected
 unsigned long last_sent_millis = 0;           // Timer last time URL sent
@@ -131,8 +131,61 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
 
-  // Configure camera settings
+  esp_err_t result = camera_init();
+  
+  if (result != ESP_OK){
+    Serial.printf("Camera init failed with error 0x%x", result);
+    return;
+  }
+  
+  sensor_t *s = esp_camera_sensor_get();   // Get camera sensor pointer
+  s->set_framesize(s, FRAMESIZE_QVGA);     // Set frame size to 1/4 VGA
+
+#if defined(CAMERA_MODEL_M5STACK_WIDE)
+  s->set_vflip(s, 1);
+  s->set_hmirror(s, 1);
+#endif
+
+  // Start WiFi
+  WiFi.begin(ssid, password);
+  int i = 0;
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    i++;
+    if(i > 20) ESP.restart();
+  }
+  Serial.println("");
+  Serial.println("WiFi connected");
+
+  setClock();                           // Set Time/date for TLS certificate validation
+  client.setCACert(rootCACertificate);  // Set Root CA certificate
+
+  mtmn_settings();                      // Set MTMN face recognition details
+  read_faces();                         // Read faces from flash
+  
+  aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);  // Allocate memory for alligned face
+  image_matrix = dl_matrix3du_alloc(1, 320, 240, 3);                 // Allocate memory for image matrix
+  
+  // Define web server events
+  web_server.on("/", handleRoot);       // This is the display page
+  web_server.onNotFound(handleNotFound);
+  
+  web_server.begin();                   // Start web server
+  socket_server.listen(81);             // Start WebSocket server on port 81
+
+  Serial.print("Camera Ready! Use 'http://");
+  Serial.print(WiFi.localIP());
+  Serial.println("' to connect");
+}
+
+
+//*****************************************************************************
+// Configure camera settings
+//
+esp_err_t camera_init(void){
   camera_config_t config;
+
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
   config.pin_d0 = Y2_GPIO_NUM;
@@ -168,23 +221,16 @@ void setup() {
   pinMode(13, INPUT_PULLUP);
   pinMode(14, INPUT_PULLUP);
 #endif
+ 
+  return esp_camera_init(&config);;  
+}
 
-  // Camera init
-  esp_err_t err = esp_camera_init(&config);
-  if (err != ESP_OK) {
-    Serial.printf("Camera init failed with error 0x%x", err);
-    return;
-  }
-  
-  sensor_t *s = esp_camera_sensor_get();   // Get camera sensor pointer
-  s->set_framesize(s, FRAMESIZE_QVGA);     // Set frame size to 1/4 VGA
 
-#if defined(CAMERA_MODEL_M5STACK_WIDE)
-  s->set_vflip(s, 1);
-  s->set_hmirror(s, 1);
-#endif
-
+//*****************************************************************************
   // Configure MTMN detection settings
+//
+void mtmn_settings(void){
+
   mtmn_config.type = FAST;
   mtmn_config.min_face = 80;
   mtmn_config.pyramid = 0.707;
@@ -198,37 +244,6 @@ void setup() {
   mtmn_config.o_threshold.score = 0.7;
   mtmn_config.o_threshold.nms = 0.7;
   mtmn_config.o_threshold.candidate_number = 1;
-
-  // Start wifi
-  WiFi.begin(ssid, password);
-  int i = 0;
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    i++;
-    if(i > 20) ESP.restart();
-  }
-  Serial.println("");
-  Serial.println("WiFi connected");
-
-  setClock();                           // Set Time/date for TLS certificate validation
-  client.setCACert(rootCACertificate);  // Set Root CA certificate
-
-  read_faces();                         // Read faces from flash
-  
-  aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);  // Allocate memory for alligned face
-  image_matrix = dl_matrix3du_alloc(1, 320, 240, 3);                 // Allocate memory for image matrix
-  
-  // Define web server events
-  web_server.on("/", handleRoot);       // This is the display page
-  web_server.onNotFound(handleNotFound);
-  
-  web_server.begin();                   // Start web server
-  socket_server.listen(81);             // Start WebSocket server on port 81
-
-  Serial.print("Camera Ready! Use 'http://");
-  Serial.print(WiFi.localIP());
-  Serial.println("' to connect");
 }
 
 
@@ -327,13 +342,13 @@ int do_enrollment(face_id_name_list *face_list, dl_matrix3d_t *new_id) {
 // Send face list to client via websocket connection.
 //
 void send_face_list(WebsocketsClient &client) {
-  client.send("delete_faces"); // tell browser to delete all faces
+  client.send("delete_faces"); // Tell browser to delete all faces
   face_id_node *head = st_face_list.head;
   char add_face[64];
   
-  for (int i = 0; i < st_face_list.count; i++) { // loop current faces
+  for (int i = 0; i < st_face_list.count; i++) { // Loop current faces
     sprintf(add_face, "listface:%s", head->id_name);
-    client.send(add_face); //send face to browser
+    client.send(add_face); // Send face to browser
     head = head->next;
   }
 }
@@ -435,10 +450,10 @@ void loop() {
     detected_face = NULL;
     face_id = NULL;
         
-    // Prepare camera
-    fb = esp_camera_fb_get();       // Get frame buffer pointer from camera (JPEG)
+    fb = esp_camera_fb_get();       // Get frame buffer pointer from camera (JPEG picture)
    
     fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item); // JPEG to bitmap conversion
+    
     detected_face = face_detect(image_matrix, &mtmn_config);      // Detect face
 
     if (detected_face) {  // A general face has been recognised (no name so far)
