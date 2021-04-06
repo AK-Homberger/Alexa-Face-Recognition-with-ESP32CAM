@@ -138,14 +138,6 @@ void setup() {
     return;
   }
   
-  sensor_t *s = esp_camera_sensor_get();   // Get camera sensor pointer
-  s->set_framesize(s, FRAMESIZE_QVGA);     // Set frame size to 1/4 VGA
-
-#if defined(CAMERA_MODEL_M5STACK_WIDE)
-  s->set_vflip(s, 1);
-  s->set_hmirror(s, 1);
-#endif
-
   // Start WiFi
   WiFi.begin(ssid, password);
   int i = 0;
@@ -206,22 +198,10 @@ esp_err_t camera_init(void){
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  //Init with high specs to pre-allocate larger buffers
-  if (psramFound()) {
-    config.frame_size = FRAMESIZE_UXGA;
-    config.jpeg_quality = 10;
-    config.fb_count = 2;
-  } else {
-    config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 12;
-    config.fb_count = 1;
-  }
+  config.frame_size = FRAMESIZE_QVGA;
+  config.jpeg_quality = 10;
+  config.fb_count = 1;
 
-#if defined(CAMERA_MODEL_ESP_EYE)
-  pinMode(13, INPUT_PULLUP);
-  pinMode(14, INPUT_PULLUP);
-#endif
- 
   return esp_camera_init(&config);;  
 }
 
@@ -345,7 +325,7 @@ void delete_all_faces(WebsocketsClient &client) {
 //*****************************************************************************
 // Handle web socket message sent from web client
 //
-void handle_message(WebsocketsClient & client, WebsocketsMessage msg) {
+void handle_message(WebsocketsClient &client, WebsocketsMessage msg) {
   
   if (msg.data() == "stream") {
     g_state = START_STREAM;
