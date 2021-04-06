@@ -161,7 +161,7 @@ void setup() {
   setClock();                           // Set Time/date for TLS certificate validation
   client.setCACert(rootCACertificate);  // Set Root CA certificate
 
-  mtmn_settings();                      // Set MTMN face recognition details
+  mtmn_config = mtmn_init_config();     // Set MTMN face recognition details (default)
   read_faces();                         // Read faces from flash
   
   aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);  // Allocate memory for alligned face
@@ -223,27 +223,6 @@ esp_err_t camera_init(void){
 #endif
  
   return esp_camera_init(&config);;  
-}
-
-
-//*****************************************************************************
-  // Configure MTMN detection settings
-//
-void mtmn_settings(void){
-
-  mtmn_config.type = FAST;
-  mtmn_config.min_face = 80;
-  mtmn_config.pyramid = 0.707;
-  mtmn_config.pyramid_times = 4;
-  mtmn_config.p_threshold.score = 0.6;
-  mtmn_config.p_threshold.nms = 0.7;
-  mtmn_config.p_threshold.candidate_number = 20;
-  mtmn_config.r_threshold.score = 0.7;
-  mtmn_config.r_threshold.nms = 0.7;
-  mtmn_config.r_threshold.candidate_number = 10;
-  mtmn_config.o_threshold.score = 0.7;
-  mtmn_config.o_threshold.nms = 0.7;
-  mtmn_config.o_threshold.candidate_number = 1;
 }
 
 
