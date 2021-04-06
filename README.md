@@ -25,6 +25,33 @@ In general, the face recognition process works like this:
 
 [Here](https://techtutorialsx.com/2020/06/13/esp32-camera-face-detection/) is a good tutorial explaining the programming steps for face recognition.
 
+The tutorial covers only the part until face detection. For recognising a specific face four more steps are necessary:
+
+```
+if (detected_face) {  // A general face has been recognised (no name so far)
+      if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Allign face
+        
+        // Switch LED on to give mor light for recognition
+        digitalWrite(LED_BUILTIN, HIGH); // LED on
+        led_on_millis = millis();        // Set on time
+        
+        face_id = get_face_id(aligned_face);  // Try to get face id for face
+        
+        if (st_face_list.count > 0) {  // Only try if we have faces registered at all
+          face_id_node *f = recognize_face_with_name(&st_face_list, face_id);
+          
+          if (f) { // Face has been sucessfully identified
+            face_detected(f->id_name);            
+          }
+        }
+```
+1. Align Face with : align_face(detected_face, image_matrix, aligned_face)
+2. Get Face ID: face_id = get_face_id(aligned_face)
+3. Compare Face Id with stored IDs: face_id_node *f = recognize_face_with_name(&st_face_list, face_id);
+4. Get name: f->id_name
+
+Thats all to regonise a stored face.
+
 ## Preparations
 The solution is using https://www.virtualsmarthome.xyz/ "URL Routine Trigger" service to trigger Alexa routines.
 
