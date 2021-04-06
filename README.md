@@ -45,10 +45,10 @@ if (detected_face) {  // A general face has been recognised (no name so far)
           }
         }
 ```
-1. Face allignment: align_face(detected_face, image_matrix, aligned_face)
-2. Get Face ID: face_id = get_face_id(aligned_face)
-3. Compare Face ID with stored IDs: face_id_node *f = recognize_face_with_name(&st_face_list, face_id);
-4. Get name: f->id_name
+1. Face allignment: _align_face(detected_face, image_matrix, aligned_face)_
+2. Get Face ID: _face_id = get_face_id(aligned_face)_
+3. Compare Face ID with stored IDs: _face_id_node *f = recognize_face_with_name(&st_face_list, face_id)_
+4. Get name: _f->id_name_
 
 Thats all to regonise a stored face.
 
