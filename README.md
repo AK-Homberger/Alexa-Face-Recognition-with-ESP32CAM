@@ -23,7 +23,7 @@ Background information regarding ESP-Face component from Espressiv can be found 
 In general, the face recognition process works like this:
 ![Flow](https://github.com/espressif/esp-face/blob/master/img/face-recognition-system.png)
 
-[Here](https://techtutorialsx.com/2020/06/13/esp32-camera-face-detection/) is a good tutorial explaining the programming steps for face recognition.
+[Here](https://techtutorialsx.com/2020/06/13/esp32-camera-face-detection/) is a good tutorial explaining the programming steps for face detection.
 
 The tutorial covers only the part until face detection. For recognising a specific face four more steps are necessary:
 
