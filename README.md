@@ -25,7 +25,7 @@ In general, the face recognition process works like this:
 
 [Here](https://techtutorialsx.com/2020/06/13/esp32-camera-face-detection/) is a good tutorial explaining the programming steps for face detection.
 
-The tutorial covers only the part until face detection. For recognising a specific face four more steps are necessary:
+The tutorial covers only the part until face detection. For recognising a specific face, four more steps are necessary:
 
 ```
 if (detected_face) {  // A general face has been recognised (no name so far)
