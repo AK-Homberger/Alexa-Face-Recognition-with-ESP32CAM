@@ -29,13 +29,13 @@ The tutorial covers only the part until face detection. For recognising a specif
 
 ```
 if (detected_face) {  // A general face has been recognised (no name so far)
-      if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Allign face
+      if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Align face
         
         // Switch LED on to give mor light for recognition
         digitalWrite(LED_BUILTIN, HIGH); // LED on
         led_on_millis = millis();        // Set on time
         
-        face_id = get_face_id(aligned_face);  // Try to get face id for face
+        face_id = get_face_id(aligned_face);  // Get face id for face
         
         if (st_face_list.count > 0) {  // Only try if we have faces registered at all
           face_id_node *f = recognize_face_with_name(&st_face_list, face_id);
