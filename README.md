@@ -67,7 +67,7 @@ const char *ssid = "ssid";
 const char *password = "password";
 ```
 
-And you have to set the different URLs in function [ReqURL()](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/ef9957b1f4fca16dc45bdeaca3f3dd21c3718409/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L42):
+And you have to set the different URLs in function [ReqURL()](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/07792d44169db89109787fa0b1fac2709447a8bc/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L50):
 ```
 // Trigger URLs: 7 URLs for maximum 7 enrolled faces (see FACE_ID_SAVE_NUMBER)
 const char *URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
