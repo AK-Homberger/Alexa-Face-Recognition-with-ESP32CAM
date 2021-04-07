@@ -18,40 +18,6 @@ I did several changes to the code:
 - Use built-in LED to show if face is detected and also to provide additional light for better detection.
 - Closed memory leak by freeing up used buffers.
 
-Background information regarding ESP-Face component from Espressiv can be found [here](https://github.com/espressif/esp-face/).
-
-In general, the face recognition process works like this:
-![Flow](https://github.com/espressif/esp-face/blob/master/img/face-recognition-system.png)
-
-[Here](https://techtutorialsx.com/2020/06/13/esp32-camera-face-detection/) is a good tutorial explaining the programming steps for face detection.
-
-The tutorial covers only the part until face detection. For recognising a specific face, four more steps are necessary:
-
-```
-if (detected_face) {  // A general face has been recognised (no name so far)
-      if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Align face
-        
-        // Switch LED on to give more light for recognition
-        digitalWrite(LED_BUILTIN, HIGH); // LED on
-        led_on_millis = millis();        // Set on time
-        
-        face_id = get_face_id(aligned_face);  // Get face id for face
-        
-        if (st_face_list.count > 0) {  // Only try if we have faces registered at all
-          face_id_node *f = recognize_face_with_name(&st_face_list, face_id);
-          
-          if (f) { // Face has been sucessfully identified
-            face_detected(f->id_name);            
-          }
-        }
-```
-1. Face alignment: **_align_face(detected_face, image_matrix, aligned_face)_**
-2. Get Face ID: **_face_id = get_face_id(aligned_face)_**
-3. Compare Face ID with stored IDs: **_face_id_node *f = recognize_face_with_name(&st_face_list, face_id)_**
-4. Get name: **_f->id_name_**
-
-That's all to recognise a stored face.
-
 ## Preparations
 The solution is using https://www.virtualsmarthome.xyz/ "URL Routine Trigger" service to trigger Alexa routines.
 
@@ -131,8 +97,42 @@ After enabling the Virtualsmarthome skill in Alexa you can then create new routi
 Enjoy now personal responses of Alexa after your face has been recognised.
 You can start for example playing your favorite music after face recognition.
 
-## Housing
+## Background
+Background information regarding ESP-Face component from Espressiv can be found [here](https://github.com/espressif/esp-face/).
 
+In general, the face recognition process works like this:
+![Flow](https://github.com/espressif/esp-face/blob/master/img/face-recognition-system.png)
+
+[Here](https://techtutorialsx.com/2020/06/13/esp32-camera-face-detection/) is a good tutorial explaining the programming steps for face detection.
+
+The tutorial covers only the part until face detection. For recognising a specific face, four more steps are necessary:
+
+```
+if (detected_face) {  // A general face has been recognised (no name so far)
+      if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Align face
+        
+        // Switch LED on to give more light for recognition
+        digitalWrite(LED_BUILTIN, HIGH); // LED on
+        led_on_millis = millis();        // Set on time
+        
+        face_id = get_face_id(aligned_face);  // Get face id for face
+        
+        if (st_face_list.count > 0) {  // Only try if we have faces registered at all
+          face_id_node *f = recognize_face_with_name(&st_face_list, face_id);
+          
+          if (f) { // Face has been sucessfully identified
+            face_detected(f->id_name);            
+          }
+        }
+```
+1. Face alignment: **_align_face(detected_face, image_matrix, aligned_face)_**
+2. Get Face ID: **_face_id = get_face_id(aligned_face)_**
+3. Compare Face ID with stored IDs: **_face_id_node *f = recognize_face_with_name(&st_face_list, face_id)_**
+4. Get name: **_f->id_name_**
+
+That's all to recognise a stored face.
+
+## Housing
 There are many nice 3D print housings for the ESP32-CAM available at Thingiverse. Example: https://www.thingiverse.com/thing:3652452  
 
 # Updates
