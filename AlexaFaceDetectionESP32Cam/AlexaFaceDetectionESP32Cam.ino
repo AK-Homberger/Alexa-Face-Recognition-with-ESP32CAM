@@ -219,7 +219,7 @@ void handleRoot() {
   if (no_socket_connection){
     web_server.send(200, "text/html", index_main); // index_main is defined in camera_index.h  
   } else {
-    web_server.send(200, "text", "Sorry only one (WebSocket) connection possible!"); 
+    web_server.send(200, "text/plain", "Sorry only one (WebSocket) connection possible!"); 
   }  
 }
 
