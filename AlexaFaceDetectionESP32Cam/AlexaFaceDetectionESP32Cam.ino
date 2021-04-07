@@ -18,7 +18,7 @@
 // URLs are requested from ESP32 via https after a defined face has been recognised.
 // A Virtual "Door Bell" can be used in Alexa to trigger routines for each face/URL.
 
-// Version 0.6, 07.04.2021, AK-Homberger
+// Version 0.7, 07.04.2021, AK-Homberger
 
 #include <Arduino.h>
 #include <ArduinoWebsockets.h>
@@ -89,6 +89,8 @@ using namespace websockets;
 WebsocketsServer socket_server; // Create Web Socket server
 
 camera_fb_t *fb = NULL;         // Frame buffer pointer for picture from camera
+
+bool no_socket_connection = true;             // Socket connection flag 
 
 unsigned long last_detected_millis = 0;       // Timer last time face detected
 unsigned long last_sent_millis = 0;           // Timer last time URL sent
@@ -196,7 +198,7 @@ esp_err_t camera_init(void){
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  config.frame_size = FRAMESIZE_QVGA; // Framesize 1/4 VGA as ecommended for face detection
+  config.frame_size = FRAMESIZE_QVGA; // Framesize 1/4 VGA as recommended for face detection
   config.jpeg_quality = 10;
   config.fb_count = 1;
   
@@ -210,10 +212,15 @@ esp_err_t camera_init(void){
 
 
 //*****************************************************************************
-// Send main web page
+// Send main web page if no WebSocket connection is established
+// Otherwise Error mesage
 //
 void handleRoot() {
-  web_server.send(200, "text/html", index_main); // index_main is defined in camera_index.h
+  if (no_socket_connection){
+    web_server.send(200, "text/html", index_main); // index_main is defined in camera_index.h  
+  } else {
+    web_server.send(200, "text", "Sorry only one (WebSocket) connection possible!"); 
+  }  
 }
 
 
@@ -401,6 +408,7 @@ void loop() {
   // Do face recognition while no client is connected via web socket connection
   
   while (!socket_server.poll()) {   // No web socket connection
+    no_socket_connection = true;
     web_server.handleClient();
     
     if (millis() - interval > led_on_millis) { // current time - face recognised time > 3 secs
@@ -419,7 +427,7 @@ void loop() {
     if (detected_face) {  // A general face has been recognised (no name so far)
       if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Align face
         
-        // Switch LED on to give mor light for recognition
+        // Switch LED on to give more light for recognition
         digitalWrite(LED_BUILTIN, HIGH); // LED on
         led_on_millis = millis();        // Set on time
         
@@ -450,6 +458,7 @@ void loop() {
   client.send("STREAMING");  // Set mode for client
    
   while (client.available()) {
+    no_socket_connection = false;
     web_server.handleClient();
     client.poll();
 
