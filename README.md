@@ -117,6 +117,8 @@ If the sketch is working, you have to add the persons with names with the web fr
 
 The face information is stored persistently in flash memory.
 
+Up to 7 different faces can be stored. You can store more than one face for the same person to improve the recognition rate even more.
+
 The **order of added users is relevant** for the URL to be sent. The name is not relevant.
 
 The web page is only necessary for managing the faces (add/delete). The recognition process is also active while no web client is connected. The built-in LED is activated for three seconds as soon as a (general) face is detected. A short blink with the LED shows a successfull face recognition process.
