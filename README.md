@@ -115,6 +115,8 @@ You need an external programmer to install the sketch on the ESP32-CAM module. H
 After programming you have to start the configuration web page with the **IP** shown in the **Serial Monitor** of the IDE.
 If the sketch is working, you have to add the persons with names with the web frontend function **ADD USER**.
 
+![Web](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Alexa%20Face%20Recognition.png)
+
 The face information is stored persistently in flash memory.
 
 Up to 7 different faces can be stored. You can store more than one face for the same person to improve the recognition rate even more.
