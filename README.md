@@ -61,13 +61,13 @@ The different URLs are then requested from the ESP32 via https after a defined f
 A virtual SmartHome "Door Bell" with the name of the defined "Trigger name"can be used in Alexa to trigger routines for each face/URL.
 
 ## Changes in the Code
-You have to set the WLAN access details in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/16c11f4091ac52eb346ab300ae436a41bcc157e0/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L45):
+You have to set the WLAN access details in the [code](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/b44ede41406d8df06486f46652731edf38ce4755/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L45):
 ```
 const char *ssid = "ssid";
 const char *password = "password";
 ```
 
-And you have to set the different URLs in function [ReqURL()](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/16c11f4091ac52eb346ab300ae436a41bcc157e0/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L49):
+And you have to set the different URLs in function [ReqURL()](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/b44ede41406d8df06486f46652731edf38ce4755/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L49):
 ```
 // Trigger URLs: 7 URLs for maximum 7 enrolled faces (see FACE_ID_SAVE_NUMBER)
 const char *URL[] PROGMEM = {"https://www.virtualsmarthome.xyz/url_routine_trigger/...",
@@ -87,7 +87,7 @@ The order of the URLs is matching the order of stored (enrolled) faces.
 **Tip:** You can store more then one face ID per person. That is further improving recognition precision.
 
 ## Root CA Certificate
-For security reasons the [Root CA certificate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/16c11f4091ac52eb346ab300ae436a41bcc157e0/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L59) is stored in the code. 
+For security reasons the [Root CA certificate](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/b44ede41406d8df06486f46652731edf38ce4755/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L59) is stored in the code. 
 The certificate is used to authenticate the identity of the web server. **The certificate will expire in September 2021**. It has to be updated then.
 
 To perform the update (with Firefox browser) just go to the https://www.virtualsmarthome.xyz web site and click on the lock symbol left to the URL. Then show details of connection, further information and show certificate. Then click on [DST Root CA X3](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Root-Certificate.png) and then on "PEM (Certificate)". The certificate text have to be copied into the sketch to update.
