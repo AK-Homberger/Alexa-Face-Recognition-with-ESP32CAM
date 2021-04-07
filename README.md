@@ -111,13 +111,15 @@ Especially **partitions.csv**. This file is not copied from Arduino IDE when usi
 
 You need an external programmer to install the sketch on the ESP32-CAM module. Here is a [tutorial](https://randomnerdtutorials.com/esp32-cam-video-streaming-face-recognition-arduino-ide/) that shows the process.
 
-## Web Frontend
-After programming you have to start the web frontend with the **IP** shown in the **Serial Monitor** of the IDE.
+## Configuration Web Page
+After programming you have to start the configuration web page with the **IP** shown in the **Serial Monitor** of the IDE.
 If the sketch is working, you have to add the persons with names with the web frontend function **ADD USER**.
 
 The face information is stored persistently in flash memory.
 
 The **order of added users is relevant** for the URL to be sent. The name is not relevant.
+
+The web page is only necessary for managing the faces (add/delete). The recognition process is also active while no web client is connected.
 
 ## Configure Alexa
 After enabling the skill in Alexa you can then create new routines. As trigger you can then select a "Door Bell" with the name you have given at Virtualsmarthome.
