@@ -3,7 +3,7 @@ An ESP32-CAM based face recognition solution to trigger Alexa routines.
 
 ![ESP32-CAM](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/ESP32-CAM.png)
 
-The purpose of this repository is to start routines in Alexa smart home service based on recognised faces from ESP32-CAM.
+The purpose of this repository is to start routines in Alexa's smart home service based on recognised faces from ESP32-CAM.
 
 ![Web](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Alexa%20Face%20Recognition.png)
 
