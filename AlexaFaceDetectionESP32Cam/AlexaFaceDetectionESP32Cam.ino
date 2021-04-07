@@ -18,14 +18,13 @@
 // URLs are requested from ESP32 via https after a defined face has been recognised.
 // A Virtual "Door Bell" can be used in Alexa to trigger routines for each face/URL.
 
-// Version 0.5, 06.04.2021, AK-Homberger
+// Version 0.6, 07.04.2021, AK-Homberger
 
 #include <Arduino.h>
 #include <ArduinoWebsockets.h>
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
 #include <WebServer.h>
-#include <esp_timer.h>
 #include <esp_camera.h>
 #include <fd_forward.h>
 #include <fr_forward.h>
@@ -40,8 +39,8 @@
 #define CAMERA_MODEL_AI_THINKER
 #include "camera_pins.h"
 
-#define ENROLL_CONFIRM_TIMES 5   // Confirm same face 5 times
 #define FACE_ID_SAVE_NUMBER 7    // Maximum number of faces stored in flash
+#define ENROLL_CONFIRM_TIMES 5   // Confirm same face 5 times
 
 // WLAN credentials
 const char *ssid = "ssid";
@@ -82,7 +81,7 @@ R8srzJmwN0jP41ZL9c8PDHIyh8bwRLtTcm1D9SZImlJnt1ir/md2cXjbDaJWFBM5
 JDGFoqgCWjBH4d1QB7wCCZAA62RjYJsWvIjJEubSfZGL+T0yjWW06XyxV3bqxbYo
 Ob8VZRzI9neWagqNdwvYkQsEjgfbKbYK7p2CNTUQ
 -----END CERTIFICATE-----
-)=====" ;
+)=====";
 
 WiFiClientSecure client;        // Create HTTPS client
 WebServer web_server(80);       // Create Web Server on TCP port 80
@@ -107,7 +106,7 @@ face_id_name_list st_face_list;               // Name list for defined face IDs
 dl_matrix3du_t *aligned_face = NULL;          // Aligned face pointer
 dl_matrix3du_t *image_matrix = NULL;          // Image matrix pointer
 
-char enroll_name[ENROLL_NAME_LEN];            // Name for face ID to be stored
+char enroll_name[ENROLL_NAME_LEN+1];          // Name for face ID to be stored
 
 typedef enum        // Status definitions
 {
@@ -125,19 +124,18 @@ en_fsm_state g_state;
 //*****************************************************************************
 void setup() {
   Serial.begin(115200);
-  Serial.setDebugOutput(true);
   Serial.println();
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
 
-  esp_err_t result = camera_init();
+  esp_err_t result = camera_init();    // Initialise camera
   
   if (result != ESP_OK){
     Serial.printf("Camera init failed with error 0x%x", result);
     return;
   }
-  
+
   // Start WiFi
   WiFi.begin(ssid, password);
   int i = 0;
@@ -145,7 +143,7 @@ void setup() {
     delay(500);
     Serial.print(".");
     i++;
-    if(i > 20) ESP.restart();
+    if(i > 20) ESP.restart();           // Restart ESP32 in case of connection problems.
   }
   Serial.println("");
   Serial.println("WiFi connected");
@@ -198,10 +196,15 @@ esp_err_t camera_init(void){
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  config.frame_size = FRAMESIZE_QVGA;
+  config.frame_size = FRAMESIZE_QVGA; // Framesize 1/4 VGA as ecommended for face detection
   config.jpeg_quality = 10;
   config.fb_count = 1;
-
+  
+#if defined(CAMERA_MODEL_ESP_EYE)
+  pinMode(13, INPUT_PULLUP);
+  pinMode(14, INPUT_PULLUP);
+#endif
+ 
   return esp_camera_init(&config);;  
 }
 
@@ -341,9 +344,7 @@ void handle_message(WebsocketsClient &client, WebsocketsMessage msg) {
 
     if (st_face_list.count < FACE_ID_SAVE_NUMBER) {
       g_state = START_ENROLL;
-      char person[FACE_ID_SAVE_NUMBER * ENROLL_NAME_LEN] = {0,};
-      msg.data().substring(8).toCharArray(person, sizeof(person));
-      memcpy(enroll_name, person, strlen(person) + 1);
+      msg.data().substring(8).toCharArray(enroll_name, ENROLL_NAME_LEN);
       client.send("CAPTURING");
     } else {
       client.send("MAXIMUM REACHED");
@@ -356,8 +357,8 @@ void handle_message(WebsocketsClient &client, WebsocketsMessage msg) {
   }
   
   if (msg.data().substring(0, 7) == "remove:") {
-    char person[ENROLL_NAME_LEN * FACE_ID_SAVE_NUMBER];
-    msg.data().substring(7).toCharArray(person, sizeof(person));
+    char person[ENROLL_NAME_LEN+1];
+    msg.data().substring(7).toCharArray(person, ENROLL_NAME_LEN);
     delete_face_id_in_flash_with_name(&st_face_list, person);
     send_face_list(client); // reset faces in the browser
   }
@@ -369,7 +370,7 @@ void handle_message(WebsocketsClient &client, WebsocketsMessage msg) {
 
 
 //*****************************************************************************
-// Face with "name" detected.
+// Face with "name" detected
 // Request URL depending on name
 //
 void face_detected(char *name) {
@@ -418,7 +419,7 @@ void loop() {
     if (detected_face) {  // A general face has been recognised (no name so far)
       if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Align face
         
-        // Switch LED on to give more light for recognition
+        // Switch LED on to give mor light for recognition
         digitalWrite(LED_BUILTIN, HIGH); // LED on
         led_on_millis = millis();        // Set on time
         
