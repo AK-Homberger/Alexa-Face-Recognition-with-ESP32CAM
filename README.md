@@ -130,7 +130,7 @@ The tutorial covers only the part until face detection. For recognising a specif
 1. Face alignment: **_align_face(detected_face, image_matrix, aligned_face)_**
 2. Get Face ID: **_face_id = get_face_id(aligned_face)_**
 3. Compare Face ID with stored IDs: **_face_recognized = recognize_face_with_name(&st_face_list, face_id)_**
-4. Get name: **_f->id_name_**
+4. Get name: **_face_recognized->id_name_**
 
 That's all to recognise a stored face.
 
