@@ -129,6 +129,7 @@ Enjoy now personal responses of Alexa after your face has been recognised.
 There are many nice 3D print housings for the ESP32-CAM available at Thingiverse. Example: https://www.thingiverse.com/thing:3652452  
 
 # Updates
+- Version 0.6, 07.04.2021: Corrected enroll name handling.
 - Version 0.5, 06.04.2021: Code simplification.
 - Version 0.4, 05.04.2021: Code simplification.
 - Version 0.3, 27.03.2021: Code simplification.
