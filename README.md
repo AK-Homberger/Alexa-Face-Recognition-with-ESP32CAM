@@ -31,7 +31,7 @@ The tutorial covers only the part until face detection. For recognising a specif
 if (detected_face) {  // A general face has been recognised (no name so far)
       if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Align face
         
-        // Switch LED on to give mor light for recognition
+        // Switch LED on to give more light for recognition
         digitalWrite(LED_BUILTIN, HIGH); // LED on
         led_on_millis = millis();        // Set on time
         
