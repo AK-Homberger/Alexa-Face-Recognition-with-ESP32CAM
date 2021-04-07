@@ -100,8 +100,9 @@ unsigned long led_on_millis = 0;              // Timer for LED on time
 const int interval = 3000;                    // LED on for 3 seconds
 
 // Face detection/recognition variables
-box_array_t *detected_face;                   // Information for detected face
+box_array_t *detected_face;                   // Information for a detected face
 dl_matrix3d_t *face_id;                       // Face ID
+face_id_node *face_recognized;                // Recognized face
 
 mtmn_config_t mtmn_config = {0};              // MTMN detection settings
 face_id_name_list st_face_list;               // Name list for defined face IDs
@@ -145,7 +146,7 @@ void setup() {
     delay(500);
     Serial.print(".");
     i++;
-    if(i > 20) ESP.restart();           // Restart ESP32 in case of connection problems.
+    if(i > 20) ESP.restart();           // Restart ESP32 in case of connection problems
   }
   Serial.println("");
   Serial.println("WiFi connected");
@@ -434,10 +435,10 @@ void loop() {
         face_id = get_face_id(aligned_face);  // Get face id for face
         
         if (st_face_list.count > 0) {  // Only try if we have faces registered at all
-          face_id_node *f = recognize_face_with_name(&st_face_list, face_id);
+          face_recognized = recognize_face_with_name(&st_face_list, face_id);
           
-          if (f) { // Face has been sucessfully identified
-            face_detected(f->id_name);            
+          if (face_recognized) { // Face has been sucessfully identified
+            face_detected(face_recognized->id_name);            
           }
         }
         dl_matrix3d_free(face_id);   // Free allocated memory
@@ -505,12 +506,12 @@ void loop() {
           }
 
           if (g_state == START_RECOGNITION  && (st_face_list.count > 0)) {
-            face_id_node *f = recognize_face_with_name(&st_face_list, face_id);
+            face_recognized = recognize_face_with_name(&st_face_list, face_id);
             
-            if (f) {
+            if (face_recognized) {
               char recognised_message[64];
-              sprintf(recognised_message, "Detected %s", f->id_name);
-              face_detected(f->id_name);
+              sprintf(recognised_message, "Detected %s", face_recognized->id_name);
+              face_detected(face_recognized->id_name);
               client.send(recognised_message);
             }
             else {
