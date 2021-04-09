@@ -43,7 +43,7 @@
 #define ENROLL_CONFIRM_TIMES 5   // Confirm same face 5 times
 
 // WLAN credentials
-const char *ssid = "sside";
+const char *ssid = "ssid";
 const char *password = "password";
 
 // Trigger URLs: 7 URLs for maximum 7 enrolled faces (see FACE_ID_SAVE_NUMBER)
