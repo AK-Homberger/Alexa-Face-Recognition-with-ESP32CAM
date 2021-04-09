@@ -109,23 +109,26 @@ The tutorial covers only the part until face detection. For recognising a specif
 
 ```
     if (detected_face) {  // A general face has been recognised (no name so far)
+      
       if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Align face
         
         // Switch LED on to give more light for recognition
         digitalWrite(LED_BUILTIN, HIGH); // LED on
         led_on_millis = millis();        // Set on time
         
-        face_id = get_face_id(aligned_face);  // Get face id for face
+        face_id = get_face_id(aligned_face);  // Get face id for detected and aligned face
         
         if (st_face_list.count > 0) {  // Only try if we have faces registered at all
-          face_recognized = recognize_face_with_name(&st_face_list, face_id);
+          
+          face_recognized = recognize_face_with_name(&st_face_list, face_id);  // Try to recognise face
           
           if (face_recognized) { // Face has been sucessfully identified
-            face_detected(face_recognized->id_name);            
+            face_detected(face_recognized->id_name);  // Request URL for recognised name            
           }
         }
-        dl_matrix3d_free(face_id);   // Free allocated memory
-      }
+        dl_matrix3d_free(face_id);        // Free allocated memory
+      }    
+      
 ```
 1. Face alignment: **_align_face(detected_face, image_matrix, aligned_face)_**
 2. Get Face ID: **_face_id = get_face_id(aligned_face)_**
