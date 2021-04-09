@@ -160,8 +160,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         addFaceToScreen(message.data.substr(9));
       } else if (message.data == "delete_faces") {
         deleteAllFacesFromScreen();
-      } else if (message.data == "door_open") {
-          ;
       } else {
           document.getElementById("current-status").innerHTML = message.data;
           document.getElementById("status-display").style.background = "green";

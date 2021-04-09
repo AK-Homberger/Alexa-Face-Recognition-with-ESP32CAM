@@ -18,7 +18,7 @@
 // URLs are requested from ESP32 via https after a defined face has been recognised.
 // A Virtual "Door Bell" can be used in Alexa to trigger routines for each face/URL.
 
-// Version 0.7, 07.04.2021, AK-Homberger
+// Version 0.8, 09.04.2021, AK-Homberger
 
 #include <Arduino.h>
 #include <ArduinoWebsockets.h>
@@ -88,8 +88,6 @@ WebServer web_server(80);       // Create Web Server on TCP port 80
 using namespace websockets;
 WebsocketsServer socket_server; // Create Web Socket server
 
-camera_fb_t *fb = NULL;         // Frame buffer pointer for picture from camera
-
 bool no_socket_connection = true;             // Socket connection flag 
 
 unsigned long last_detected_millis = 0;       // Timer last time face detected
@@ -100,15 +98,15 @@ unsigned long led_on_millis = 0;              // Timer for LED on time
 const int interval = 3000;                    // LED on for 3 seconds
 
 // Face detection/recognition variables
+camera_fb_t *fb;                              // Frame buffer pointer for picture from camera
 box_array_t *detected_face;                   // Information for a detected face
-dl_matrix3d_t *face_id;                       // Face ID
-face_id_node *face_recognized;                // Recognized face
+dl_matrix3du_t *image_matrix;                 // Image matrix pointer
+dl_matrix3du_t *aligned_face;                 // Aligned face pointer
+dl_matrix3d_t *face_id;                       // Face ID pointer
+face_id_node *face_recognized;                // Recognized face pointer
 
-mtmn_config_t mtmn_config = {0};              // MTMN detection settings
+mtmn_config_t mtmn_config;                    // MTMN detection settings
 face_id_name_list st_face_list;               // Name list for defined face IDs
-dl_matrix3du_t *aligned_face = NULL;          // Aligned face pointer
-dl_matrix3du_t *image_matrix = NULL;          // Image matrix pointer
-
 char enroll_name[ENROLL_NAME_LEN+1];          // Name for face ID to be stored
 
 typedef enum        // Status definitions
@@ -154,18 +152,19 @@ void setup() {
   setClock();                           // Set Time/date for TLS certificate validation
   client.setCACert(rootCACertificate);  // Set Root CA certificate
 
-  mtmn_config = mtmn_init_config();     // Set MTMN face recognition details (default)
+  mtmn_config = mtmn_init_config();     // Set MTMN face recognition details (default values)
   read_faces();                         // Read faces from flash
   
-  aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);  // Allocate memory for aligned face
   image_matrix = dl_matrix3du_alloc(1, 320, 240, 3);                 // Allocate memory for image matrix
+  aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);  // Allocate memory for aligned face
   
   // Define web server events
-  web_server.on("/", handleRoot);       // This is the display page
-  web_server.onNotFound(handleNotFound);
+  web_server.on("/", handleRoot);           // This is the main HTML page
+  web_server.on("/uptime", handleUptime);   // To show uptime and heap size
+  web_server.onNotFound(handleNotFound);    // Error page
   
   web_server.begin();                   // Start web server
-  socket_server.listen(81);             // Start WebSocket server on port 81
+  socket_server.listen(81);             // Start web socket server on port 81
 
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
@@ -199,37 +198,43 @@ esp_err_t camera_init(void){
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  config.frame_size = FRAMESIZE_QVGA; // Framesize 1/4 VGA as recommended for face detection
+  config.frame_size = FRAMESIZE_QVGA; // Frame size 1/4 VGA as recommended for face detection
   config.jpeg_quality = 10;
   config.fb_count = 1;
   
-#if defined(CAMERA_MODEL_ESP_EYE)
-  pinMode(13, INPUT_PULLUP);
-  pinMode(14, INPUT_PULLUP);
-#endif
- 
-  return esp_camera_init(&config);;  
+  return esp_camera_init(&config);
 }
 
 
 //*****************************************************************************
 // Send main web page if no WebSocket connection is established
-// Otherwise Error mesage
+// Otherwise error message
 //
 void handleRoot() {
   if (no_socket_connection){
     web_server.send(200, "text/html", index_main); // index_main is defined in camera_index.h  
   } else {
-    web_server.send(200, "text/plain", "Sorry only one (WebSocket) connection possible!"); 
+    web_server.send(200, "text/plain", "Sorry, only one (WebSocket) connection possible!"); 
   }  
 }
 
 
 //*****************************************************************************
-// Unknown request. Send error 404
+// Unknown request - Send error 404
 //
 void handleNotFound() {                          
   web_server.send(404, "text/plain", "File Not Found\n\n");
+}
+
+
+//*****************************************************************************
+// Handle uptime request
+// Shows uptime in minutes and free heap size (to detect memory leaks)
+//
+void handleUptime() {                          
+  char text[50];
+  snprintf(text, 50, "Uptime: %d minutes\nFree Heap: %d\n", millis()/60000, ESP.getFreeHeap());
+  web_server.send(200, "text/plain", text);  
 }
 
 
@@ -244,16 +249,16 @@ void setClock() {
   time_t nowSecs = time(nullptr);
   while (nowSecs < 8 * 3600 * 2) {
     delay(500);
-    Serial.print(F("."));
+    Serial.print(".");
     yield();
     nowSecs = time(nullptr);
   }
+  Serial.println();
 }
 
 
 //*****************************************************************************
 // Request URL for detected face "i".
-// Set your own URLs
 //
 void ReqURL(int i) {
 
@@ -262,9 +267,9 @@ void ReqURL(int i) {
 
   HTTPClient https;
 
-  if (https.begin(client, URL[i])) {  // HTTPS
-     // start connection and send HTTP header
-    int httpCode = https.GET();
+  if (https.begin(client, URL[i])) {  // Set HTTPS request for URL i
+     
+    int httpCode = https.GET();       // Request url
 
     // httpCode will be negative on error
     if (httpCode > 0) {
@@ -273,9 +278,7 @@ void ReqURL(int i) {
       // file found at server
       if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
         String payload = https.getString();
-        Serial.println(payload);
-        Serial.print("Heap size: ");
-        Serial.println(xPortGetFreeHeapSize());  // Show free memory
+        Serial.println(payload);      // Show web server response       
       }
     } else {
       Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
@@ -309,7 +312,7 @@ int do_enrollment(face_id_name_list *face_list, dl_matrix3d_t *new_id) {
 
 
 //*****************************************************************************
-// Send face list to client via websocket connection.
+// Send face list to client via WebSocket connection.
 //
 void send_face_list(WebsocketsClient &client) {
   client.send("delete_faces"); // Tell browser to delete all faces
@@ -334,7 +337,7 @@ void delete_all_faces(WebsocketsClient &client) {
 
 
 //*****************************************************************************
-// Handle web socket message sent from web client
+// Handle web socket message (commands) sent from web client
 //
 void handle_message(WebsocketsClient &client, WebsocketsMessage msg) {
   
@@ -392,11 +395,11 @@ void face_detected(char *name) {
   
   Serial.println("Face detected");
   
-  face_id_node *head = st_face_list.head;
+  face_id_node *head = st_face_list.head;   // Set face list start
 
-  for (i=0; i < st_face_list.count; i++)  {
-    if (strcmp(name, head->id_name) == 0) ReqURL(i);
-    head = head->next;
+  for (i=0; i < st_face_list.count; i++)  { // Check all faces
+    if (strcmp(name, head->id_name) == 0) ReqURL(i); // Name found, request URL number i
+    head = head->next;  // Pointer to next face
   }
     
   digitalWrite(LED_BUILTIN, LOW); // LED off
@@ -415,42 +418,42 @@ void loop() {
     if (millis() - interval > led_on_millis) { // current time - face recognised time > 3 secs
       digitalWrite(LED_BUILTIN, LOW); // LED off after 3 secs
     }
-
-    detected_face = NULL;
-    face_id = NULL;
         
     fb = esp_camera_fb_get();       // Get frame buffer pointer from camera (JPEG picture)
-   
+    
     fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item); // JPEG to bitmap conversion
     
     detected_face = face_detect(image_matrix, &mtmn_config);      // Detect face
 
     if (detected_face) {  // A general face has been recognised (no name so far)
+      
       if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Align face
         
         // Switch LED on to give more light for recognition
         digitalWrite(LED_BUILTIN, HIGH); // LED on
         led_on_millis = millis();        // Set on time
         
-        face_id = get_face_id(aligned_face);  // Get face id for face
+        face_id = get_face_id(aligned_face);  // Get face id for detected and aligned face
         
         if (st_face_list.count > 0) {  // Only try if we have faces registered at all
-          face_recognized = recognize_face_with_name(&st_face_list, face_id);
+          
+          face_recognized = recognize_face_with_name(&st_face_list, face_id);  // Try to recognise face
           
           if (face_recognized) { // Face has been sucessfully identified
-            face_detected(face_recognized->id_name);            
+            face_detected(face_recognized->id_name);  // Request URL for recognised name            
           }
         }
-        dl_matrix3d_free(face_id);   // Free allocated memory
+        dl_matrix3d_free(face_id);        // Free allocated memory
       }
-      dl_lib_free(detected_face->score); // Free allocated memory
+      dl_lib_free(detected_face->score);  // Free allocated memory
       dl_lib_free(detected_face->box); 
       if (detected_face->landmark != NULL) dl_lib_free(detected_face->landmark);
       dl_lib_free(detected_face);
     }
-  esp_camera_fb_return(fb);  // Release frame buffer
-  fb = NULL;
+  esp_camera_fb_return(fb);  // Release frame buffer  
   }  
+
+  // Do face recognition while a client is connected via web socket connection
   
   auto client = socket_server.accept();  // Accept web socket connection
   client.onMessage(handle_message);
@@ -458,7 +461,7 @@ void loop() {
   send_face_list(client);    // Send face list to client
   client.send("STREAMING");  // Set mode for client
    
-  while (client.available()) {
+  while (client.available()) {  // Loop as long as a client is connected
     no_socket_connection = false;
     web_server.handleClient();
     client.poll();
@@ -470,11 +473,8 @@ void loop() {
     fb = esp_camera_fb_get();
 
     if (g_state == START_DETECT || g_state == START_ENROLL || g_state == START_RECOGNITION) {
-      detected_face = NULL;
-      face_id = NULL;
-
+      
       fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item);
-
       detected_face = face_detect(image_matrix, &mtmn_config);
 
       if (detected_face) {
@@ -496,7 +496,6 @@ void loop() {
             client.send(enrolling_message);
             
             if (left_sample_face == 0) {
-              ESP_LOGI(TAG, "Enrolled Face ID: %s", st_face_list.tail->id_name);
               g_state = START_STREAM;
               char captured_message[64];
               sprintf(captured_message, "FACE CAPTURED FOR %s", st_face_list.tail->id_name);
@@ -536,9 +535,8 @@ void loop() {
       }
     }
 
-    client.sendBinary((const char *)fb->buf, fb->len); // Send frame buffer (jpg picture) to client
+    client.sendBinary((const char *)fb->buf, fb->len); // Send frame buffer (JPEG picture) to client
 
-    esp_camera_fb_return(fb);       // Release frame buffer
-    fb = NULL;
+    esp_camera_fb_return(fb);       // Release frame buffer    
   }  
 }
