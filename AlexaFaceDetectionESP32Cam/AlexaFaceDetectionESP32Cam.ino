@@ -18,7 +18,7 @@
 // URLs are requested from ESP32 via https after a defined face has been recognised.
 // A Virtual "Door Bell" can be used in Alexa to trigger routines for each face/URL.
 
-// Version 0.8, 09.04.2021, AK-Homberger
+// Version 0.9, 09.04.2021, AK-Homberger
 
 #include <Arduino.h>
 #include <ArduinoWebsockets.h>
@@ -43,7 +43,7 @@
 #define ENROLL_CONFIRM_TIMES 5   // Confirm same face 5 times
 
 // WLAN credentials
-const char *ssid = "ssid";
+const char *ssid = "sside";
 const char *password = "password";
 
 // Trigger URLs: 7 URLs for maximum 7 enrolled faces (see FACE_ID_SAVE_NUMBER)
@@ -245,7 +245,7 @@ void handleUptime() {
 void setClock() {
   configTime(0, 0, "pool.ntp.org", "time.nist.gov");
 
-  Serial.print(F("Waiting for NTP time sync: "));
+  Serial.print("Waiting for NTP time sync: ");
   time_t nowSecs = time(nullptr);
   while (nowSecs < 8 * 3600 * 2) {
     delay(500);
@@ -269,7 +269,7 @@ void ReqURL(int i) {
 
   if (https.begin(client, URL[i])) {  // Set HTTPS request for URL i
      
-    int httpCode = https.GET();       // Request url
+    int httpCode = https.GET();       // Request URL
 
     // httpCode will be negative on error
     if (httpCode > 0) {
@@ -415,8 +415,8 @@ void loop() {
     no_socket_connection = true;
     web_server.handleClient();
     
-    if (millis() - interval > led_on_millis) { // current time - face recognised time > 3 secs
-      digitalWrite(LED_BUILTIN, LOW); // LED off after 3 secs
+    if (millis() > led_on_millis + interval) { // LED off after 3 secs
+      digitalWrite(LED_BUILTIN, LOW); 
     }
         
     fb = esp_camera_fb_get();       // Get frame buffer pointer from camera (JPEG picture)
@@ -447,7 +447,7 @@ void loop() {
       }
       dl_lib_free(detected_face->score);  // Free allocated memory
       dl_lib_free(detected_face->box); 
-      if (detected_face->landmark != NULL) dl_lib_free(detected_face->landmark);
+      dl_lib_free(detected_face->landmark);
       dl_lib_free(detected_face);
     }
   esp_camera_fb_return(fb);  // Release frame buffer  
@@ -466,8 +466,8 @@ void loop() {
     web_server.handleClient();
     client.poll();
 
-    if (millis() - interval > led_on_millis) { // Current time - face recognised time > 3 secs
-      digitalWrite(LED_BUILTIN, LOW); //LED off
+    if (millis() > led_on_millis + interval) { // LED off after 3 secs
+      digitalWrite(LED_BUILTIN, LOW); 
     }
 
     fb = esp_camera_fb_get();
@@ -521,7 +521,7 @@ void loop() {
         }
         dl_lib_free(detected_face->score);
         dl_lib_free(detected_face->box);
-        if (detected_face->landmark != NULL) dl_lib_free(detected_face->landmark);
+        dl_lib_free(detected_face->landmark);
         dl_lib_free(detected_face);
       }
       else {
@@ -530,7 +530,7 @@ void loop() {
         }
       }
 
-      if (g_state == START_DETECT && millis() - last_detected_millis > 500) { // Detecting but no face detected
+      if (g_state == START_DETECT && millis() > last_detected_millis + 500) { // Detecting but no face detected
         client.send("DETECTING");
       }
     }
