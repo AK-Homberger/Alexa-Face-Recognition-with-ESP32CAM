@@ -185,7 +185,7 @@ We can then use the result to do the face recognition part. That are only four m
 
 That's all to recognise a stored face.
 
-It is important to release the allocated memory block used for the detection/recognition process with **:dl_matrix3d_free()_**, **_dl_lib_free()_** and  **_esp_camera_fb_return()_**. Without freeing up the allocated memory the available internal memory of the ESP32 (calle **heap**) would get smaller and smaller over time. In the end thr the ESP2 would cras and restart. Mermory leaks are often the reason for unstable code. With "IP-Address/uptime" you can check the last start time of the ESP32 and also the remaining free heap size.
+It is important to release the allocated memory blocks used for the detection/recognition process with **_dl_matrix3d_free()_**, **_dl_lib_free()_** and  **_esp_camera_fb_return()_**. Without freeing up the allocated memory, the available internal memory of the ESP32 (called **heap**) would get smaller and smaller over time. In the end the ESP2 would crash and restart. Memory leaks are often the reason for unstable code. With "IP-Address/uptime" you can check the last start time of the ESP32 and also the remaining free heap size.
 
 Here is the routine that handles the web request:
 ```
