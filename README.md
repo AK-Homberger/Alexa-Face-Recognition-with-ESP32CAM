@@ -103,6 +103,8 @@ Background information regarding the ESP-Face component from Espressiv can be fo
 In general, the face recognition process works like this:
 ![Flow](https://github.com/espressif/esp-face/blob/master/img/face-recognition-system.png)
 
+Let's see how the flow chart is implemented in the sketch.
+
 To implement the detection/recognition process, we have to define some **global variables/objects**:
 ```
 / Face detection/recognition variables
