@@ -98,7 +98,7 @@ Enjoy now personal responses of Alexa after your face has been recognised.
 You can start for example playing your favorite music after face recognition.
 
 ## Background
-Background information regarding the ESP-Face component from Espressiv can be found [here](https://github.com/espressif/esp-face/).
+Background information regarding the ESP-Face component from Espressif can be found [here](https://github.com/espressif/esp-face/).
 
 In general, the face recognition process works like this:
 ![Flow](https://github.com/espressif/esp-face/blob/master/img/face-recognition-system.png)
