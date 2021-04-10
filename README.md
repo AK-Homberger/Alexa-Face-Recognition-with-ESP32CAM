@@ -150,7 +150,7 @@ In loop we will do the detection and the the recognition work. Let's start with 
 ```
 
 These three lines is all to detect a potential face:
-1. With **_fb = esp_camera_fb_get()_** we will get the picture from the camera. The format is JPEG compessed. For the face detection process we need the picture as plain bitmap. 
+1. With **_fb = esp_camera_fb_get()_** we will get the picture from the camera. The format is 320*240 pixel, JPEG compessed. For the face detection process we need the picture as plain bitmap. 
 2. The conversion is done with **_fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item)_**. The **_image_matrix_** contains then the bitmap picture. 
 3. And now we try to detect a face with **_detected_face = face_detect(image_matrix, &mtmn_config)_**. The routine gets the bitmap and the configuration parameters as input. 
 
