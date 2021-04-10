@@ -77,7 +77,7 @@ Especially **partitions.csv**. This file is not copied from Arduino IDE when usi
 
 You need an external (FTDI) programmer to install the sketch on the ESP32-CAM module. 
 
-![FTDI](https://i1.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/12/ESP32-CAM-FTDI-programmer-5V-supply.png?w=750&quality=100&strip=all&ssl=1)
+![FTDI](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/ESP-CAM-FTDI.png)
 
 For programming you have to connect IO0 to GND, RX/TX (crossed) and 5V/GND. Then press the "boot" button on the ESP32-CAM. After that you can start the upload process within the Arduino IDE (with FTDI USB port selected).
 
