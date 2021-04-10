@@ -77,7 +77,7 @@ Especially **partitions.csv**. This file is not copied from Arduino IDE when usi
 
 You need an external (FTDI) programmer to install the sketch on the ESP32-CAM module. 
 
-![FTDI](https://content.instructables.com/ORIG/FYO/HZNA/KK8AMV92/FYOHZNAKK8AMV92.png?auto=webp&frame=1&fit=bounds&md=9b461dac42280991c2e6a57fd350871b)
+![FTDI](https://content.instructables.com/ORIG/FYO/HZNA/KK8AMV92/FYOHZNAKK8AMV92.png)
 
 For programming you have to connect IO0 to GND, RX/TX (crossed) and 5V/GND. Then press the "boot" button on the ESP32-CAM. After that you can start the upload process within the Arduino IDE (with FTDI USB-Serial port selected).
 
