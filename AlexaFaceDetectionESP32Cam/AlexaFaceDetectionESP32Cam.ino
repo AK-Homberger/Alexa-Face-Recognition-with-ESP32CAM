@@ -5,7 +5,7 @@
   version 2.1 of the License, or (at your option) any later version.
   This code is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
   Lesser General Public License for more details.
   You should have received a copy of the GNU Lesser General Public
   License along with this library; if not, write to the Free Software
@@ -18,7 +18,7 @@
 // URLs are requested from ESP32 via https after a defined face has been recognised.
 // A Virtual "Door Bell" can be used in Alexa to trigger routines for each face/URL.
 
-// Version 0.9, 09.04.2021, AK-Homberger
+// Version 1.0, 10.04.2021, AK-Homberger
 
 #include <Arduino.h>
 #include <ArduinoWebsockets.h>
@@ -29,14 +29,9 @@
 #include <fd_forward.h>
 #include <fr_forward.h>
 #include <fr_flash.h>
-#include "camera_index.h"
+#include "camera_index.h"        // Main HTML page
 
-// Select camera model
-//#define CAMERA_MODEL_WROVER_KIT
-//#define CAMERA_MODEL_ESP_EYE
-//#define CAMERA_MODEL_M5STACK_PSRAM
-//#define CAMERA_MODEL_M5STACK_WIDE
-#define CAMERA_MODEL_AI_THINKER
+#define CAMERA_MODEL_AI_THINKER  // Camera model for ESP32-CAM
 #include "camera_pins.h"
 
 #define FACE_ID_SAVE_NUMBER 7    // Maximum number of faces stored in flash
@@ -109,6 +104,8 @@ mtmn_config_t mtmn_config;                    // MTMN detection settings
 face_id_name_list st_face_list;               // Name list for defined face IDs
 char enroll_name[ENROLL_NAME_LEN+1];          // Name for face ID to be stored
 
+char time_str[40];                            // Last start date/time
+
 typedef enum        // Status definitions
 {
   START_STREAM,
@@ -163,8 +160,8 @@ void setup() {
   web_server.on("/uptime", handleUptime);   // To show uptime and heap size
   web_server.onNotFound(handleNotFound);    // Error page
   
-  web_server.begin();                   // Start web server
-  socket_server.listen(81);             // Start web socket server on port 81
+  web_server.begin();                       // Start web server
+  socket_server.listen(81);                 // Start web socket server on port 81
 
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
@@ -198,7 +195,7 @@ esp_err_t camera_init(void){
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  config.frame_size = FRAMESIZE_QVGA; // Frame size 1/4 VGA as recommended for face detection
+  config.frame_size = FRAMESIZE_QVGA; // Frame size 1/4 VGA as required for face detection
   config.jpeg_quality = 10;
   config.fb_count = 1;
   
@@ -229,11 +226,11 @@ void handleNotFound() {
 
 //*****************************************************************************
 // Handle uptime request
-// Shows uptime in minutes and free heap size (to detect memory leaks)
+// Last start date/time and free heap size (to detect memory leaks)
 //
 void handleUptime() {                          
-  char text[50];
-  snprintf(text, 50, "Uptime: %d minutes\nFree Heap: %d\n", millis()/60000, ESP.getFreeHeap());
+  char text[80];
+  snprintf(text, 80, "Last start: %s \nFree Heap: %d\n", time_str, ESP.getFreeHeap());
   web_server.send(200, "text/plain", text);  
 }
 
@@ -243,7 +240,9 @@ void handleUptime() {
 // Setting clock just to be sure...
 //
 void setClock() {
-  configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+  struct tm timeinfo;
+  
+  configTime(3600, 3600, "pool.ntp.org", "time.nist.gov");
 
   Serial.print("Waiting for NTP time sync: ");
   time_t nowSecs = time(nullptr);
@@ -253,7 +252,11 @@ void setClock() {
     yield();
     nowSecs = time(nullptr);
   }
+
   Serial.println();
+  getLocalTime(&timeinfo);
+  strftime(time_str, sizeof(time_str), "%d.%m.%Y %T %A", &timeinfo);
+  Serial.println(time_str);  
 }
 
 
@@ -371,7 +374,7 @@ void handle_message(WebsocketsClient &client, WebsocketsMessage msg) {
     char person[ENROLL_NAME_LEN+1];
     msg.data().substring(7).toCharArray(person, ENROLL_NAME_LEN);
     delete_face_id_in_flash_with_name(&st_face_list, person);
-    send_face_list(client); // reset faces in the browser
+    send_face_list(client); // Reset faces in the browser
   }
   
   if (msg.data() == "delete_all") {
@@ -426,18 +429,18 @@ void loop() {
     detected_face = face_detect(image_matrix, &mtmn_config);      // Detect face
 
     if (detected_face) {  // A general face has been recognised (no name so far)
-      
+
+      // Switch LED on to give more light for recognition
+      digitalWrite(LED_BUILTIN, HIGH); // LED on
+      led_on_millis = millis();        // Set on time
+
       if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {  // Align face
-        
-        // Switch LED on to give more light for recognition
-        digitalWrite(LED_BUILTIN, HIGH); // LED on
-        led_on_millis = millis();        // Set on time
         
         face_id = get_face_id(aligned_face);  // Get face id for detected and aligned face
         
         if (st_face_list.count > 0) {  // Only try if we have faces registered at all
           
-          face_recognized = recognize_face_with_name(&st_face_list, face_id);  // Try to recognise face
+          face_recognized = recognize_face_with_name(&st_face_list, face_id);  // Try to recognise face by comparing face id's
           
           if (face_recognized) { // Face has been sucessfully identified
             face_detected(face_recognized->id_name);  // Request URL for recognised name            
@@ -478,9 +481,11 @@ void loop() {
       detected_face = face_detect(image_matrix, &mtmn_config);
 
       if (detected_face) {
+
+        digitalWrite(LED_BUILTIN, HIGH); // LED on
+        led_on_millis = millis();
+                
         if (align_face(detected_face, image_matrix, aligned_face) == ESP_OK) {
-          digitalWrite(LED_BUILTIN, HIGH); // LED on
-          led_on_millis = millis(); // 
           
           face_id = get_face_id(aligned_face);
           last_detected_millis = millis();
@@ -517,9 +522,9 @@ void loop() {
               client.send("FACE NOT RECOGNISED");
             }
           }
-          dl_matrix3d_free(face_id);
+          dl_matrix3d_free(face_id);  // Free allocated memory
         }
-        dl_lib_free(detected_face->score);
+        dl_lib_free(detected_face->score);  // Free allocated memory
         dl_lib_free(detected_face->box);
         dl_lib_free(detected_face->landmark);
         dl_lib_free(detected_face);
