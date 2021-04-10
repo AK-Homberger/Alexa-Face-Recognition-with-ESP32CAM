@@ -114,7 +114,7 @@ dl_matrix3d_t *face_id;                       // Face ID pointer
 face_id_node *face_recognized;                // Recognized face pointer
 mtmn_config_t mtmn_config;                    // MTMN detection settings
 ```
-- The frame buffer point **_*fb_** will later contain the pointer to the picture from the ESP camera. The format of the picture is in JPEG (compressed) format.
+- The frame buffer pointer **_*fb_** will later contain the pointer to the picture from the ESP camera. The format of the picture is in JPEG (compressed) format.
 - The pointer **_*detected_face_** will point to a struct containig information for a detected face.
 - **_*image_matrix_** pointer will point to a struct containing the bitmap of the picture. We need the bitmap to detect and recognise faces.
 - The **_*aligned_face_** pointer will point to a struct containg "aligned" information for the face detected. The aligned information is necessary for face recognition process.
