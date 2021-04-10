@@ -117,7 +117,7 @@ mtmn_config_t mtmn_config;                    // MTMN detection settings
 - The frame buffer point **_*fb_** will later contain the pointer to the picture from the ESP camera. The format of the picture is in JPEG (compressed) format.
 - The pointer **_*detected_face_** will point to a struct containig information for a detected face.
 - **_*image_matrix_** pointer will point to a struct containing the bitmap of the picture. We need the bitmap to detect and recognise faces.
-- The **_*aligned_face_** pointer wil point to a struct containg "alligned" information for the face detected. The alligned information is necessary for face recognition process.
+- The **_*aligned_face_** pointer will point to a struct containg "alligned" information for the face detected. The alligned information is necessary for face recognition process.
 - The **_*face_id_** contains the the result of the face recognition process. We will later compare the face_id with the stored face_id's to detect a specific person.
 - The struct **_mtmn_config_** will contain the configuration parameters for the face detection process.
 
