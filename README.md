@@ -160,7 +160,7 @@ These three lines is all to detect a potential face:
 The **_detected_face_** struct contains the result of the detection process. If a face has been detected the value of **_detected_face_** is **true**.
 
 ### Face Recognition
-We can then use the result to do the face recognition part. That are only four more steps:
+Now we can do the face recognition part. That are only four more steps:
 
 ```
     if (detected_face) {  // A general face has been recognised (no name so far)
