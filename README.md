@@ -121,6 +121,8 @@ mtmn_config_t mtmn_config;                    // MTMN detection settings
 - The **_*face_id_** contains the the result of the face recognition process. We will later compare the face_id with the stored face_id's to detect a specific person.
 - The struct **_mtmn_config_** will contain the configuration parameters for the face detection process.
 
+The function **_camera_init()_** is used to configure the camera. Important is the correct "frame size" It has to be 1/4 VGA (320*240 picel). It is configured with the line **_config.frame_size = FRAMESIZE_QVGA_**.
+
 As next step we have to do some preparation work in **setup()**:
 
 ```
@@ -132,7 +134,7 @@ As next step we have to do some preparation work in **setup()**:
 ```
 - With **_mtmn_config = mtmn_init_config()_** we will set the paramenters to the default values.
 - Then we read the faces (names and face_id's) from flash memory. This is necessary to compare the face_id's later.
-- As last preparation step we have to allocate memory for the struct containing the **_image_matrix_**, which is the bitmap for face detection.
+- As last preparation step we have to allocate memory for the struct containing the **_image_matrix_**, which is the bitmap for face detection. The size of the bitmap is 1/4 VGA (320*240).
 - And also for the struct **_alligned_face_**.
 
 That's all preparation needed.
@@ -180,7 +182,7 @@ We can then use the result to do the face recognition part. That are only four m
 ```
 1. Face alignment: **_align_face(detected_face, image_matrix, aligned_face)_**. The routine get the detected_face and the bitmap information as input. The result will be stored in the aligned_face struct.
 2. Now we get the Face ID with: **_face_id = get_face_id(aligned_face)_**. The Face ID contains then the characteristic information for an aligned face.
-3. We compare then the Face ID with stored IDs: **_face_recognized = recognize_face_with_name(&st_face_list, face_id)_**
+3. We compare then the Face ID with stored IDs: **_face_recognized = recognize_face_with_name(&st_face_list, face_id)_**. If a face has been recognised the value of **_face_recognized_** is **_true_**.
 4. As last step we will get the name for the recognised face: **_face_recognized->id_name_**
 
 That's all to recognise a stored face.
