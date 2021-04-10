@@ -189,6 +189,11 @@ That's all to recognise a stored face.
 
 It is important to release the allocated memory blocks used for the detection/recognition process with **_dl_matrix3d_free()_**, **_dl_lib_free()_** and  **_esp_camera_fb_return()_**. Without freeing up the allocated memory, the available internal memory of the ESP32 (called **heap**) would get smaller and smaller over time. In the end the ESP2 would crash and restart. Memory leaks are often the reason for unstable code. With "IP-Address/uptime" you can check the last start time of the ESP32 and also the remaining free heap size.
 
+```
+Last start: 09.04.2021 13:37:31 Friday 
+Free Heap: 185108
+```
+
 Here is the routine that handles the web request:
 ```
 //*****************************************************************************
