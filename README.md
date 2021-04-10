@@ -103,7 +103,7 @@ Background information regarding the ESP-Face component from Espressiv can be fo
 In general, the face recognition process works like this:
 ![Flow](https://github.com/espressif/esp-face/blob/master/img/face-recognition-system.png)
 
-To implement the detection/recognition process, we have to define some global variables/objects:
+To implement the detection/recognition process, we have to define some **global variables/objects**:
 ```
 / Face detection/recognition variables
 camera_fb_t *fb;                              // Frame buffer pointer for picture from camera
@@ -139,7 +139,7 @@ As next step we have to do some preparation work in **setup()**:
 
 That's all preparation needed.
 
-In loop we will do the detection and the the recognition work. 
+In **loop()** we will do the detection and the the recognition work. 
 
 ### Face Detection
 Let's start with face detection:
