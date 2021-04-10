@@ -117,7 +117,7 @@ mtmn_config_t mtmn_config;                    // MTMN detection settings
 - The frame buffer point **_*fb_** will later contain the pointer to the picture from the ESP camera. The format of the picture is in JPEG (compressed) format.
 - The pointer **_*detected_face_** will point to a struct containig information for a detected face.
 - **_*image_matrix_** pointer will point to a struct containing the bitmap of the picture. We need the bitmap to detect and recognise faces.
-- The **_*aligned_face_** pointer will point to a struct containg "alligned" information for the face detected. The alligned information is necessary for face recognition process.
+- The **_*aligned_face_** pointer will point to a struct containg "aligned" information for the face detected. The aligned information is necessary for face recognition process.
 - The **_*face_id_** contains the the result of the face recognition process. We will later compare the face_id with the stored face_id's to detect a specific person.
 - The struct **_mtmn_config_** will contain the configuration parameters for the face detection process.
 
@@ -131,7 +131,7 @@ As next step we have to do some preparation work in **setup()**:
   aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);  // Allocate memory for aligned face
 ```
 - With **_mtmn_config = mtmn_init_config()_** we will set the paramenters to the default values.
-- Then we read the faces (names and face_id's) from flash memory. This is necessry to compare the face_id's later.
+- Then we read the faces (names and face_id's) from flash memory. This is necessary to compare the face_id's later.
 - As last preparation step we have to allocate memory for the global pointers containing the **_image_matrix_**, which is the bitmap for face detection.
 - And also for the **_alligned_face_**.
 
@@ -183,6 +183,21 @@ We can then use the result to do the face recognition part. That are only four m
 4. Get name: **_face_recognized->id_name_**
 
 That's all to recognise a stored face.
+
+It is important to release the allocated memory block used for the detection/recognition process with **:dl_matrix3d_free()_**, **_dl_lib_free()_** and  **_esp_camera_fb_return()_**. Without freeing up the allocated memory the available internal memory of the ESP32 (calle **heap**) would get smaller and smaller over time. In the end thr the ESP2 would cras and restart. Mermory leaks are often the reason for unstable code. With "IP-Address/uptime" you can check the last start time of the ESP32 and also the remaining free heap size.
+
+Here is the routine that handles the web request:
+```
+//*****************************************************************************
+// Handle uptime request
+// Last start date/time and free heap size (to detect memory leaks)
+//
+void handleUptime() {                          
+  char text[80];
+  snprintf(text, 80, "Last start: %s \nFree Heap: %d\n", time_str, ESP.getFreeHeap());
+  web_server.send(200, "text/plain", text);  
+}
+```
 
 ## Housing
 There are many nice 3D print housings for the ESP32-CAM available at Thingiverse. Example: https://www.thingiverse.com/thing:3652452  
