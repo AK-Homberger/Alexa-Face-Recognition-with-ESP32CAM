@@ -97,7 +97,7 @@ After enabling the Virtualsmarthome skill in Alexa you can then create new routi
 Enjoy now personal responses of Alexa after your face has been recognised.
 You can start for example playing your favorite music after face recognition.
 
-## Background
+## Background Information for Face Detection/Recognition
 Background information regarding the ESP-Face component from Espressif can be found [here](https://github.com/espressif/esp-face/).
 
 In general, the face recognition process works like this:
