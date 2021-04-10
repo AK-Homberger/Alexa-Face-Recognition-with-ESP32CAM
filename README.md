@@ -107,7 +107,7 @@ Let's see how the flow chart is implemented in the sketch.
 
 For face detection/recognition we need three **include files**:
 ```
-#include <fd_forward.h>    // Header file For face detection
+#include <fd_forward.h>    // Header file for face detection
 #include <fr_forward.h>    // Header file for face recognition
 #include <fr_flash.h>      // Header file for flash storage handling
 ```
