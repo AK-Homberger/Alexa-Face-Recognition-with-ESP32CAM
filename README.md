@@ -132,10 +132,10 @@ As next step we have to do some preparation work in **setup()**:
 ```
 - With **_mtmn_config = mtmn_init_config()_** we will set the paramenters to the default values.
 - Then we read the faces (names and face_id's) from flash memory. This is necessary to compare the face_id's later.
-- As last preparation step we have to allocate memory for the global pointers containing the **_image_matrix_**, which is the bitmap for face detection.
-- And also for the **_alligned_face_**.
+- As last preparation step we have to allocate memory for the struct containing the **_image_matrix_**, which is the bitmap for face detection.
+- And also for the struct **_alligned_face_**.
 
-That's all preparation.
+That's all preparation needed.
 
 In loop we will do the detection and the the recognition work. Let's start with face detection:
 
@@ -146,6 +146,7 @@ In loop we will do the detection and the the recognition work. Let's start with 
     
     detected_face = face_detect(image_matrix, &mtmn_config);      // Detect face
 ```
+
 These three lines is all to detect a potential face:
 1. With **_fb = esp_camera_fb_get()_** we will get the picture from the camera. The format is JPEG compessed. For the face detection process we need the picture as plain bitmap. 
 2. The conversion is done with **_fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item)_**. The **_image_matrix_** contains then the bitmap picture. 
