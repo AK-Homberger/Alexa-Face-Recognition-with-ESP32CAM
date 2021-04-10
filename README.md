@@ -139,7 +139,10 @@ As next step we have to do some preparation work in **setup()**:
 
 That's all preparation needed.
 
-In loop we will do the detection and the the recognition work. Let's start with face detection:
+In loop we will do the detection and the the recognition work. 
+
+### Face Detection
+Let's start with face detection:
 
 ```
     fb = esp_camera_fb_get();       // Get frame buffer pointer from camera (JPEG picture)
@@ -156,6 +159,7 @@ These three lines is all to detect a potential face:
 
 The **_detected_face_** struct contains the result of the detection process. If a face has been detected the value of **_detected_face_** is **true**.
 
+### Face Recognition
 We can then use the result to do the face recognition part. That are only four more steps:
 
 ```
