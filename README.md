@@ -75,7 +75,12 @@ If you copy/move the sketch, make sure all four files are in the new folder:
 
 Especially **partitions.csv**. This file is not copied from Arduino IDE when using "Safe as..." function.
 
-You need an external programmer to install the sketch on the ESP32-CAM module. Here is a [tutorial](https://randomnerdtutorials.com/esp32-cam-video-streaming-face-recognition-arduino-ide/) that shows the process.
+You need an external programmer to install the sketch on the ESP32-CAM module. 
+
+![FTDI](https://i1.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/12/ESP32-CAM-FTDI-programmer-5V-supply.png?w=750&quality=100&strip=all&ssl=1)
+
+
+Here is a [tutorial](https://randomnerdtutorials.com/esp32-cam-video-streaming-face-recognition-arduino-ide/) that shows the process.
 
 ## Configuration Web Page
 After programming you have to start the configuration web page with the **IP** shown in the **Serial Monitor** of the IDE.
