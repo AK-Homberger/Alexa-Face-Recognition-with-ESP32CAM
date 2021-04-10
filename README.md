@@ -79,7 +79,9 @@ You need an external (FTDI) programmer to install the sketch on the ESP32-CAM mo
 
 ![FTDI](https://i1.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/12/ESP32-CAM-FTDI-programmer-5V-supply.png?w=750&quality=100&strip=all&ssl=1)
 
-For programming mode you have to connect IO0 to GND and the press the "boot" button on the ESP32-CAM. Then you can start the upload process within the Arduino IDE.
+For programming you have to connect IO0 to GND, RX/TX (crossed) and 5V/GND. Then press the "boot" button on the ESP32-CAM. After that you can start the upload process within the Arduino IDE (with FTDI USB port selected).
+
+For normal start open IO0 from GND and press "boot" again.
 
 ## Configuration Web Page
 After programming you have to start the configuration web page with the **IP** shown in the **Serial Monitor** of the IDE.
