@@ -143,8 +143,8 @@ As next step we have to do some preparation work in **setup()**:
 ```
 - With **_mtmn_config = mtmn_init_config()_** we will set the paramenters to the default values.
 - Then we read the faces (names and face_id's) from flash memory. This is necessary to compare the face_id's later.
-- As last preparation step we have to allocate memory for the struct containing the **_image_matrix_**, which is the bitmap for face detection. The size of the bitmap is 1/4 VGA (320*240).
-- And also for the struct **_alligned_face_**. An aligned face has the format 56x56 pixel.
+- As last preparation step we have to allocate memory for the struct containing the **_image_matrix_**, which is the bitmap for face detection. The size of the bitmap is 1/4 VGA (320*240 pixel).
+- And also for the struct **_alligned_face_**. An aligned face has the format 56*56 pixel.
 
 That's all preparation needed.
 
