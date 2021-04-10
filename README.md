@@ -178,10 +178,10 @@ We can then use the result to do the face recognition part. That are only four m
         dl_matrix3d_free(face_id);        // Free allocated memory
       } 
 ```
-1. Face alignment: **_align_face(detected_face, image_matrix, aligned_face)_**
-2. Get Face ID: **_face_id = get_face_id(aligned_face)_**
-3. Compare Face ID with stored IDs: **_face_recognized = recognize_face_with_name(&st_face_list, face_id)_**
-4. Get name: **_face_recognized->id_name_**
+1. Face alignment: **_align_face(detected_face, image_matrix, aligned_face)_**. The routine get the detected_face and the bitmap information as input. The result will be stored in the aligned_face struct.
+2. Now we get the Face ID with: **_face_id = get_face_id(aligned_face)_**. The Face ID contains then the charcteristic information for a aligned face.
+3. We compare then the Face ID with stored IDs: **_face_recognized = recognize_face_with_name(&st_face_list, face_id)_**
+4. As last step we will get the name for the recognised face: **_face_recognized->id_name_**
 
 That's all to recognise a stored face.
 
