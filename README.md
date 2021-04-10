@@ -103,9 +103,57 @@ Background information regarding ESP-Face component from Espressiv can be found 
 In general, the face recognition process works like this:
 ![Flow](https://github.com/espressif/esp-face/blob/master/img/face-recognition-system.png)
 
-[Here](https://techtutorialsx.com/2020/06/13/esp32-camera-face-detection/) is a good tutorial explaining the programming steps for face detection.
 
-The tutorial covers only the part until face detection. For recognising a specific face, four more steps are necessary:
+
+To implement the detection/recognition process we have to define some global variables/object:
+```
+/ Face detection/recognition variables
+camera_fb_t *fb;                              // Frame buffer pointer for picture from camera
+box_array_t *detected_face;                   // Information for a detected face
+dl_matrix3du_t *image_matrix;                 // Image matrix pointer
+dl_matrix3du_t *aligned_face;                 // Aligned face pointer
+dl_matrix3d_t *face_id;                       // Face ID pointer
+face_id_node *face_recognized;                // Recognized face pointer
+mtmn_config_t mtmn_config;                    // MTMN detection settings
+```
+- The frame buffer point ***fb** will later contain the pointer to the picture from the ESP camera. The format of the picture is in JPEG (compressed) format.
+- The pointer ***detected_face** will pint to a struct containg information for a detected face.
+- ***image_matrix pointer will point to a struct containing the bitmap of the picture. We need the bitmap to detect and recognise faces
+- The ***aligned_face pointer wil point to a struct containg "alligned" information for the face detected. The alligned information is necessary for face recognition process.
+- The ***face_id contains the the result of the face recognition process. We will later compare the face_id with the stored face_id's to detect a specific persson.
+- **mtmn_config** will contain the configuration parameters for the face detection process.
+
+As next step we have to do some preparation work in **setup()**:
+
+```
+  mtmn_config = mtmn_init_config();     // Set MTMN face recognition details (default values)
+  read_faces();                         // Read faces from flash
+  
+  image_matrix = dl_matrix3du_alloc(1, 320, 240, 3);                 // Allocate memory for image matrix
+  aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);  // Allocate memory for aligned face
+```
+- With **mtmn_config = mtmn_init_config();** we will set the paramenters to the default values.
+- Then we read the faces from flash memory. This i necessry to compare the face_id's later.
+- As last preparation step we have to allocate memory for the global pointers containing the **image_matrix**, which is the bitmap for face detection.
+- And also for the **alligned_face**.
+
+That's all preparation.
+
+In loop we will do the detection and the the recognition work. Let's start with face detection:
+
+```
+    fb = esp_camera_fb_get();       // Get frame buffer pointer from camera (JPEG picture)
+    fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item); // JPEG to bitmap conversion
+    detected_face = face_detect(image_matrix, &mtmn_config);      // Detect face
+```
+These three lines is all to detect a potential face:
+1. With **fb = esp_camera_fb_get()** we will get the pivture from the camera. The format is JPEG compessed. For the face detection process we need the picture a plain bitmap. 
+2. The conversion is done with **fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item)**. The **image_matrix** contains then the bitmap picture. 
+3. And now we try to detect a face with **detected_face = face_detect(image_matrix, &mtmn_config);**. The routine gets the bitmap and the configuratin parameters as input. 
+
+The **detected_face** struct contains the result of the detection process. If a face has been detected the value of **detected_face** is **true**.
+
+We can then use the result to do the face recognition part. That are only four more steps:
 
 ```
     if (detected_face) {  // A general face has been recognised (no name so far)
