@@ -114,7 +114,7 @@ For face detection/recognition we need three **include files**:
 
 To implement the detection/recognition process, we have to define some **global variables/objects**:
 ```
-/ Face detection/recognition variables
+// Face detection/recognition variables
 camera_fb_t *fb;                              // Frame buffer pointer for picture from camera
 box_array_t *detected_face;                   // Information for a detected face
 dl_matrix3du_t *image_matrix;                 // Image matrix pointer
