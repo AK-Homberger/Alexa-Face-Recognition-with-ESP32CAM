@@ -75,9 +75,9 @@ If you copy/move the sketch, make sure all four files are in the new folder:
 
 Especially **partitions.csv**. This file is not copied from Arduino IDE when using "Safe as..." function.
 
-**_camera_index.h_** contains the web page and **_camera_pins.h_** the GPIO definition for the used camera **CAMERA_MODEL_AI_THINKER** in our case for the ESP32-CAM.
+**_camera_index.h_** contains the HTML/Javascript web page and **_camera_pins.h_** the GPIO definitions for the used camera model. In our case the model is **CAMERA_MODEL_AI_THINKER** for the ESP32-CAM.
 
-_**partitions.csv_** defines the changes partition information for flash memory:
+**_partitions.csv_** defines the changes partition information for flash memory:
 
 | Name    | Type    | SubType | Offset   | Size     | Flags |
 |---------|---------|---------|----------|----------|-------|
@@ -85,6 +85,8 @@ _**partitions.csv_** defines the changes partition information for flash memory:
 | otadata | data    | ota     | 0xe000   | 0x2000   |       |
 | app0    | app     | ota_0   | 0x10000  | 0x300000 |       |
 | fr      | 32      | 32      | 0x310000 | 0xF0000  |       |
+
+The **fr** partition is relevant for storage of the Face IDs.
 
 You need an external (FTDI) programmer to install the sketch on the ESP32-CAM module. 
 
