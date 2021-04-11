@@ -79,14 +79,12 @@ Especially **partitions.csv**. This file is not copied from Arduino IDE when usi
 
 _**partitions.csv_** defines the changes partition information for flash memory:
 
-![Flash](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/AlexaFaceDetectionESP32Cam/partitions.csv)
-
-# Name,   Type, SubType, Offset,  Size, Flags
-nvs,      data, nvs,     0x9000,  0x5000,
-otadata,  data, ota,     0xe000,  0x2000,
-app0,     app,  ota_0,   0x10000, 0x300000,
-fr,       32, 32,        0x310000, 0xF0000,
-
+|Name     | Type    | SubType | Offset   | Size     | Flags |
+|---------|---------|---------|----------|------   -|-------|
+|nvs      | data    | nvs     | 0x9000   | 0x5000   |       |
+|otadata  | data    | ota     | 0xe000   | 0x2000   |       |
+|app0     | app     | ota_0   | 0x10000  | 0x300000 |       |
+|fr       | 32      | 32      | 0x310000 | 0xF0000  |       |
 
 You need an external (FTDI) programmer to install the sketch on the ESP32-CAM module. 
 
