@@ -150,7 +150,7 @@ mtmn_config_t mtmn_config;                    // MTMN detection settings
 - The **_*face_id_** contains the the result of the face recognition process. We will later compare the face_id with the stored face_id's to detect a specific person.
 - The struct **_mtmn_config_** will contain the configuration parameters for the face detection process.
 
-The function **_camera_init()_** in the code is used to configure the camera. Important is the correct "frame size" It has to be 1/4 VGA (320*240 pixel). It is configured with the line **_config.frame_size = FRAMESIZE_QVGA_**.
+The function [**_camera_init()_**](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/e768f120aeb69f736a2f02948c25cf25811fcc24/AlexaFaceDetectionESP32Cam/AlexaFaceDetectionESP32Cam.ino#L172) in the code is used to configure the camera. Important is the correct "frame size" It has to be 1/4 VGA (320*240 pixel). It is configured with the line **_config.frame_size = FRAMESIZE_QVGA_**.
 
 As next step we have to do some preparation work in **setup()**:
 
