@@ -75,6 +75,19 @@ If you copy/move the sketch, make sure all four files are in the new folder:
 
 Especially **partitions.csv**. This file is not copied from Arduino IDE when using "Safe as..." function.
 
+**_camera_index.h_** contains the web page and **_camera_pins.h_** the GPIO definition for the used camera **CAMERA_MODEL_AI_THINKER** in our case for the ESP32-CAM.
+
+_**partitions.csv_** defines the changes partition information for flash memory:
+
+![Flash](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/AlexaFaceDetectionESP32Cam/partitions.csv)
+
+# Name,   Type, SubType, Offset,  Size, Flags
+nvs,      data, nvs,     0x9000,  0x5000,
+otadata,  data, ota,     0xe000,  0x2000,
+app0,     app,  ota_0,   0x10000, 0x300000,
+fr,       32, 32,        0x310000, 0xF0000,
+
+
 You need an external (FTDI) programmer to install the sketch on the ESP32-CAM module. 
 
 ![FTDI](https://content.instructables.com/ORIG/FYO/HZNA/KK8AMV92/FYOHZNAKK8AMV92.png)
