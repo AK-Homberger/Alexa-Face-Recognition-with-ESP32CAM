@@ -155,13 +155,13 @@ The function **_camera_init()_** in the code is used to configure the camera. Im
 As next step we have to do some preparation work in **setup()**:
 
 ```
-  mtmn_config = mtmn_init_config();     // Set MTMN face recognition details (default values)
+  mtmn_config = mtmn_init_config();     // Set MTMN face detection details (default values)
   read_faces();                         // Read faces from flash
   
   image_matrix = dl_matrix3du_alloc(1, 320, 240, 3);                 // Allocate memory for image matrix
   aligned_face = dl_matrix3du_alloc(1, FACE_WIDTH, FACE_HEIGHT, 3);  // Allocate memory for aligned face
 ```
-- With **_mtmn_config = mtmn_init_config()_** we will set the paramenters to the default values.
+- With **_mtmn_config = mtmn_init_config()_** we set the parameters for face detection to the default values defined in [**_fd_forward.h_**](https://github.com/espressif/esp-face/blob/420fc7e219ba98e40a5493b9d4be270db2f2d724/face_detection/include/fd_forward.h#L71).
 - Then we read the faces (names and face_id's) from flash memory. This is necessary to compare the face_id's later.
 - As last preparation step we have to allocate memory for the struct containing the **_image_matrix_**, which is the bitmap for face detection. The size of the bitmap is 1/4 VGA (320*240 pixel).
 - And also for the struct **_alligned_face_**. An aligned face has the format 56*56 pixel.
