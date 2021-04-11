@@ -77,7 +77,7 @@ Especially **partitions.csv**. This file is not copied from Arduino IDE when usi
 
 **_camera_index.h_** contains the HTML/Javascript web page and **_camera_pins.h_** the GPIO definitions for the used camera model. In our case the model is **CAMERA_MODEL_AI_THINKER** for the ESP32-CAM.
 
-**_partitions.csv_** defines the changes partition information for flash memory:
+**_partitions.csv_** defines the partition information for flash memory:
 
 | Name    | Type    | SubType | Offset   | Size     | Flags |
 |---------|---------|---------|----------|----------|-------|
