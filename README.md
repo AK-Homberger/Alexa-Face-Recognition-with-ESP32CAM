@@ -86,7 +86,7 @@ Especially **partitions.csv**. This file is not copied from Arduino IDE when usi
 | app0    | app     | ota_0   | 0x10000  | 0x300000 |       |
 | fr      | 32      | 32      | 0x310000 | 0xF0000  |       |
 
-The **fr** partition is relevant for storage of the Face IDs.
+The **fr** partition is relevant for storage of the Face IDs. With the current Arduino IDE it is sufficient to store the partition information simply in the sketch folder.
 
 You need an external (FTDI) programmer to install the sketch on the ESP32-CAM module. 
 
