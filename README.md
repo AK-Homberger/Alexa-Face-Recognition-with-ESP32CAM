@@ -75,7 +75,7 @@ If you copy/move the sketch, make sure all four files are in the new folder:
 
 Especially **partitions.csv**. This file is not copied from Arduino IDE when using "Safe as..." function.
 
-**_camera_index.h_** contains the HTML/Javascript web page and **_camera_pins.h_** the GPIO definitions for the used camera model. In our case the model is **CAMERA_MODEL_AI_THINKER** for the ESP32-CAM.
+[**_camera_index.h_**](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/AlexaFaceDetectionESP32Cam/camera_index.h) contains the HTML/Javascript web page and [**_camera_pins.h_**](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/AlexaFaceDetectionESP32Cam/camera_pins.h) the GPIO definitions for the used camera model. In our case the model is **CAMERA_MODEL_AI_THINKER** for the ESP32-CAM.
 
 **_partitions.csv_** defines the partition information for flash memory:
 
