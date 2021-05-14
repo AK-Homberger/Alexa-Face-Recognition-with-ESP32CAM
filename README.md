@@ -113,8 +113,6 @@ The web page is only necessary for managing the faces (add/delete). The recognit
 ## Configure Alexa
 After enabling the Virtualsmarthome skill in Alexa you can then create new routines. As trigger you can then select a "Door Bell" with the name you have given at Virtualsmarthome.
 
-![Alexa](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Alexa-Config.png)
-
 Enjoy now personal responses of Alexa after your face has been recognised.
 You can start for example playing your favorite music after face recognition.
 
