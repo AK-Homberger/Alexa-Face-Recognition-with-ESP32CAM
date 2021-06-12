@@ -92,7 +92,7 @@ You need an external (FTDI) programmer to install the sketch on the ESP32-CAM mo
 
 ![FTDI](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/ESP32-CAM-FTDI.png)
 
-For programming you have to connect IO0 to GND, RX/TX (crossed) and 5V/GND. Then press the "boot" button on the ESP32-CAM. After that you can start the upload process within the Arduino IDE (with FTDI USB-Serial port selected).
+For programming you have to connect IO0 to GND, RX/TX (crossed) and 5V/GND. Then press the "boot" button on the ESP32-CAM. After that, you can start the upload process within the Arduino IDE (with FTDI USB-Serial port selected).
 
 For normal start open IO0 from GND and press "boot" again.
 
