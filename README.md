@@ -111,7 +111,7 @@ The **order of added users is relevant** for the URL to be sent. The name is not
 The web page is only necessary for managing the faces (add/delete). The recognition process is also active while no web client is connected. The built-in LED is activated for three seconds as soon as a (general) face is detected. A short blink with the LED shows a successfull face recognition process.
 
 ## Configuring Alexa
-After enabling the Virtualsmarthome skill in Alexa you can then create new routines. As trigger you can then select a "Door Bell" with the name you have given at Virtualsmarthome.
+After enabling the Virtualsmarthome skill in Alexa you can then create new routines. As trigger you can then select a virtual "Door Bell" with the name you have given at Virtualsmarthome.
 
 Enjoy now personal responses of Alexa after your face has been recognised.
 You can start for example playing your favorite music after face recognition.
