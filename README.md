@@ -246,7 +246,7 @@ void handleUptime() {
 There are many nice 3D print housings for the ESP32-CAM available at Thingiverse. Example: https://www.thingiverse.com/thing:3652452  
 
 # Updates
-- Version 1.1, 04.10.2021: Updated root certificate to ISRG Root X1.
+- Version 1.1, 04.10.2021: Updated root certificate to "ISRG Root X1".
 - Version 1.0, 10.04.2021: Added last start date/time in /uptime.
 - Version 0.8, 09.04.2021: Added uptime/free heap web page (/uptime).
 - Version 0.7, 07.04.2021: Added error message for second HTTP connection. Only one WebSocket connection possible.
