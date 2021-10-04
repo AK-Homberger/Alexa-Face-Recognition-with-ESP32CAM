@@ -58,6 +58,8 @@ The certificate is used to authenticate the identity of the web server. **The ce
 
 To perform the update (with Firefox browser) just go to the https://www.virtualsmarthome.xyz web site and click on the lock symbol left to the URL. Then show details of connection, further information and show certificate. Then click on [DST Root CA X3](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/Root-Certificate.png) and then on "PEM (Certificate)". The certificate text have to be copied into the sketch to update.
 
+For version 1.1 code I did the update to the new "ISRG Root X1" root certificate already.
+
 ## Arduino IDE and Programming
 The sketch works with current Arduino IDE 1.8.13 and ESP32 board version 1.0.5.
 
