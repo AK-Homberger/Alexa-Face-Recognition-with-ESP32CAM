@@ -92,7 +92,7 @@ The **fr** partition is relevant for storage of the Face IDs. With the current A
 
 You need an external (FTDI) programmer to install the sketch on the ESP32-CAM module. 
 
-![FTDI]https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/ESP32-CAM-FTDI-v2.png)
+![FTDI](https://github.com/AK-Homberger/Alexa-Face-Recognition-with-ESP32CAM/blob/main/ESP32-CAM-FTDI-v2.png)
 
 For programming you have to connect IO0 to GND, RX/TX (crossed) and 5V/GND. Then press the "boot" button on the ESP32-CAM. After that, you can start the upload process within the Arduino IDE (with FTDI USB-Serial port selected).
 
